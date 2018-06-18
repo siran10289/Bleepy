@@ -1,0 +1,123 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+ext {
+
+    // Sdk and tools
+    minSdkVersion = 21
+    targetSdkVersion = 27
+    compileSdkVersion = 27
+    buildToolsVersion = '27.0.3'
+
+    // App dependencies
+    supportLibraryVersion = '27.0.2'
+    recyclerViewVersion = '27.0.2'
+    contraintLayoutVersion = '1.0.2'
+    multidexVersion = '1.0.1'
+    butterKnifeVersion = '8.8.1'
+    daggerVersion = '2.8'
+    googlePlayServiceVersion = '15.0.1'
+    dexterVersioin = '2.2.1'
+    glideVersion='3.7.0'
+    iKnownVersion = '1.1.1'
+    okhttpVersion='3.4.1'
+    retrofitVersion='2.1.0'
+    timePickerVersion = '3.5.0'
+    eventBusVersion = '3.1.1'
+    circleimageview = '2.2.0'
+    cropViewVersion='1.1.7'
+    firebase='15.0.2'
+
+
+    //Testing
+    robolectricVersion = '3.1.1'
+    jUnitVersion = '4.12'
+    assertJVersion = '1.7.1'
+    mockitoVersion = '1.10.19'
+    dexmakerVersion = '1.0'
+    espressoVersion = '2.2.2'
+    testingSupportLibVersion = '0.1'
+    supportTestRunner = '1.0.1'
+    mpChartVersion = 'v3.0.3'
+    swipeLayoutVersion = '1.2.0'
+    javaglVersion = '0.2.1'
+    appDependencies = [
+
+
+            appcompatV7                         : "com.android.support:appcompat-v7:${supportLibraryVersion}",
+            constraintLayout                    : "com.android.support.constraint:constraint-layout:${contraintLayoutVersion}",
+            appCompatV4                         : "com.android.support:support-v4:${supportLibraryVersion}",
+            design                              : "com.android.support:design:${supportLibraryVersion}",
+            daggerCompiler                      : "com.google.dagger:dagger-compiler:${daggerVersion}",
+            dagger                              : "com.google.dagger:dagger:${daggerVersion}",
+            butterKnife                         : "com.jakewharton:butterknife:${butterKnifeVersion}",
+            butterKnifeAnnotation               : "com.jakewharton:butterknife-compiler:${butterKnifeVersion}",
+            recyclerView                        : "com.android.support:recyclerview-v7:${recyclerViewVersion}",
+            multidex                            : "com.android.support:multidex:${multidexVersion}",
+            playServicesPlus                    : "com.google.android.gms:play-services-auth:${googlePlayServiceVersion}",
+            cardView                            : "com.android.support:cardview-v7:${supportLibraryVersion}",
+            dexter                              : "com.karumi:dexter:${dexterVersioin}",
+            glide                               : "com.github.bumptech.glide:glide:${glideVersion}",
+            iKnown                              : "com.github.iknow4:android-utils-sdk:${iKnownVersion}",
+            retrofit_converter_gson             : "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
+            materialdatetimepicker              : "com.wdullaer:materialdatetimepicker:${timePickerVersion}",
+            swipelayout                         : "com.daimajia.swipelayout:library:${swipeLayoutVersion}@aar",
+            eventBus                            : "org.greenrobot:eventbus:${eventBusVersion}",
+            exifinterface                       : "com.android.support:exifinterface:$supportLibraryVersion",
+            circleimageview                     : "de.hdodenhof:circleimageview:$circleimageview",
+            okhttp                              :   "com.squareup.okhttp3:okhttp:${okhttpVersion}",
+            okhttpLogging                       :   "com.squareup.okhttp3:logging-interceptor:${okhttpVersion}",
+            retrofit                            :   "com.squareup.retrofit2:retrofit:${retrofitVersion}",
+            retrofit_converter_gson             :   "com.squareup.retrofit2:converter-gson:${retrofitVersion}",
+            cropView                            :   "com.isseiaoki:simplecropview:${cropViewVersion}",
+            fcm                                 :   "com.google.firebase:firebase-messaging:${firebase}",
+
+
+    ]
+
+    appTestDependencies = [
+            mockito          : "org.mockito:mockito-core:${mockitoVersion}",
+            dexmaker         : "com.google.dexmaker:dexmaker:${dexmakerVersion}",
+            dexmakerMockito  : "com.google.dexmaker:dexmaker-mockito:${dexmakerVersion}",
+            testingSupportLib: "com.android.support.test:testing-support-lib:${testingSupportLibVersion}",
+            supportTestRunner: "com.android.support.test:runner:${supportTestRunner}",
+            jUnitTest        : "junit:junit:${jUnitVersion}",
+            test_espresso    : "com.android.support.test.espresso:espresso-core:$espressoVersion"
+    ]
+}
+buildscript {
+
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.1.2'
+        classpath 'com.google.gms:google-services:3.2.1'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
+        classpath "io.realm:realm-gradle-plugin:4.3.1"
+        classpath 'me.tatarka:gradle-retrolambda:3.7.0'
+        classpath 'com.novoda:bintray-release:0.8.0'
+
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+        classpath 'com.google.ar.sceneform:plugin:1.0.0'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven { url "https://jitpack.io" }
+        maven { url "https://maven.google.com" }
+        mavenCentral()
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+
+}
+

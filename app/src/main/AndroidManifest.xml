@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="bleepy.pack.com.bleepy">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+
+
+    <application
+        android:name=".BleepyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".view.welcome.SplashScreenActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".view.signin.SigninActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".view.signup.RegistrationActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".view.signin.ForgetCredentialsActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".view.signup.ImageCropperActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".view.welcome.WelcomeActivity"
+            android:screenOrientation="portrait"/>
+
+        <service android:name=".fcm.DeliverxFBMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <service android:name=".fcm.DelivrexTokenFetchService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="@string/default_notification_channel_id"/>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.provider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
+        <activity
+            android:name=".view.activation.PersonalDeviceActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".view.activation.EmailRegistrationActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".view.activation.RegistrationKeyActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".view.HomeActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".view.Dashboard.DashboardActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity android:name=".view.Dashboard.MyScheduleActivity">
+        </activity>
+        <activity android:name=".view.team.GroupMembersActivity">
+        </activity>
+        <activity android:name=".view.callforhelp.CallForHelpActivity">
+        </activity>
+    </application>
+
+</manifest>

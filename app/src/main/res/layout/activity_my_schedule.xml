@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.Dashboard.MyScheduleActivity">
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:elevation="0dp"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <include layout="@layout/toolbar"></include>
+
+    </android.support.design.widget.AppBarLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:showIn="@layout/activity_registration">
+        <com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:primaryColor="@color/white"
+            app:textColor="@android:color/black"
+            app:selectedItem_textColor="@color/white"
+            android:id="@+id/collapsibleCalendarView"
+            app:todayItem_textColor="@android:color/black"
+            app:todayItem_background="@drawable/circle_white_stroke_background"
+            app:selectedItem_background="@drawable/circle_white_solid_background"
+            app:buttonLeft_drawableTintColor="@android:color/black"
+            app:buttonRight_drawableTintColor="@android:color/black"
+            app:expandIconColor="@android:color/black"
+            app:eventColor="@android:color/holo_green_light">
+
+        </com.shrikanthravi.collapsiblecalendarview.widget.CollapsibleCalendar>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/twenty_dp"
+            android:paddingLeft="@dimen/ten_dp"
+            android:background="#05224E"
+            android:textSize="@dimen/sixteen_sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:text="@string/current_event"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvMySchedule"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="@dimen/twenty_dp"
+            android:visibility="visible"
+            android:background="@color/schedule_background">
+
+        </android.support.v7.widget.RecyclerView>
+        <TextView
+            android:id="@+id/tvNoEvents"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:visibility="gone"
+            android:background="@color/schedule_background"
+            android:text="@string/no_events_are_availabe"/>
+
+    </LinearLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>

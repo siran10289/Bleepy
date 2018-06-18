@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context=".view.Dashboard.EditProfileFragment">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/two_hundered_dp"
+        android:background="@color/colorPrimary"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_marginTop="@dimen/fifty_dp"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/cv_notifications"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/ten_dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="2dp"
+            app:cardElevation="@dimen/five_dp"
+            app:cardUseCompatPadding="true"
+            app:contentPadding="@dimen/zero_dp">
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/ten_dp"
+                android:layout_weight="2"
+                android:background="@android:color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/ten_dp"
+                    android:layout_marginRight="@dimen/ten_dp"
+                    android:layout_marginTop="@dimen/thirty_dp"
+                    android:orientation="vertical">
+
+                    <EditText
+                        android:id="@+id/etCurrentPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/five_dp"
+                        android:focusableInTouchMode="true"
+                        android:nextFocusDown="@+id/etNewPassword"
+                        android:hint="@string/current_password"
+                        android:inputType="textEmailAddress"
+                        android:maxLines="1"
+                        android:textSize="@dimen/sixteen_sp"/>
+
+                    <EditText
+                        android:id="@+id/etNewPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/five_dp"
+                        android:nextFocusDown="@+id/etConfirmPassword"
+                        android:focusableInTouchMode="true"
+                        android:hint="@string/new_password"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:textSize="@dimen/sixteen_sp"/>
+
+                    <EditText
+                        android:id="@+id/etConfirmPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/five_dp"
+                        android:layout_marginBottom="@dimen/thirty_dp"
+                        android:focusableInTouchMode="true"
+                        android:hint="@string/confirm_password"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:textSize="@dimen/sixteen_sp"/>
+
+
+
+
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+        </android.support.v7.widget.CardView>
+        <android.support.v4.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/ll_bottom_action"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/fifty_dp"
+                android:layout_margin="@dimen/twenty_dp"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btnSave"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/forty_dp"
+                    android:background="@drawable/bg_login_submit"
+                    android:text="@string/save"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
+
+        </android.support.v4.widget.NestedScrollView>
+
+
+
+
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" >
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="@dimen/twenty_dp"
+        android:orientation="vertical">
+        <android.support.design.widget.TabLayout
+            android:id="@+id/layoutDots"
+            android:layout_width="@dimen/two_hundered_dp"
+            android:layout_height="@dimen/thirty_dp"
+            android:layout_above="@+id/ll_bottom_action"
+            android:layout_alignParentStart="true"
+            android:layout_gravity="bottom"
+            android:gravity="center"
+            app:tabBackground="@drawable/dot_tab_selector"
+            app:tabGravity="center"
+            app:tabIndicatorHeight="0dp">
+
+        </android.support.design.widget.TabLayout>
+        <Button
+            android:id="@+id/btnGetStarted"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/forty_dp"
+            android:layout_marginTop="@dimen/ten_dp"
+            android:layout_gravity="right"
+            android:padding="@dimen/ten_dp"
+            android:textColor="@color/black"
+            android:background="@drawable/round_rect_white"
+            android:text="@string/getting_started"/>
+
+    </LinearLayout>
+
+
+
+
+</FrameLayout>

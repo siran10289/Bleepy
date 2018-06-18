@@ -1,0 +1,59 @@
+{
+  "project_info": {
+    "project_number": "967206675349",
+    "firebase_url": "https://bleepy-56aad.firebaseio.com",
+    "project_id": "bleepy-56aad",
+    "storage_bucket": "bleepy-56aad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:967206675349:android:b55408d0694088fb",
+        "android_client_info": {
+          "package_name": "bleepy.pack.com.bleepy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "967206675349-0bosff2a8i28u49v7bpvileoje3123ds.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "bleepy.pack.com.bleepy",
+            "certificate_hash": "b0edb97c483c79ed069735c6b197a221d78cb085"
+          }
+        },
+        {
+          "client_id": "967206675349-ekfdpkj7t60e370vjm2uqto5665envmu.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "967206675349-ekfdpkj7t60e370vjm2uqto5665envmu.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB1N5DS4zbqX4-5ZSyjYul4XpU5KhH09k8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "967206675349-ekfdpkj7t60e370vjm2uqto5665envmu.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

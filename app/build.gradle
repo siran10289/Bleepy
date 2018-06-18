@@ -1,0 +1,112 @@
+apply plugin: 'com.android.application'
+def libs = rootProject.extensions.getByName("ext");
+android {
+    compileSdkVersion libs.getAt("compileSdkVersion")
+    buildToolsVersion libs.getAt("buildToolsVersion")
+    defaultConfig {
+        applicationId "bleepy.pack.com.bleepy"
+        minSdkVersion libs.getAt("minSdkVersion")
+        targetSdkVersion libs.getAt("targetSdkVersion")
+        versionCode 1
+        versionName "Version 1.0.0"
+        vectorDrawables.useSupportLibrary = true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.debug
+            versionNameSuffix ""
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        innerTest {
+            matchingFallbacks = ['debug', 'release']
+        }
+    }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+    }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+    }
+
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+}
+
+dependencies {
+    def appDependencies = rootProject.ext.appDependencies
+    def appTestDependencies = rootProject.ext.appTestDependencies
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation appDependencies.appcompatV7
+    implementation appDependencies.appCompatV4
+    implementation appDependencies.design
+    implementation appDependencies.constraintLayout
+    implementation appDependencies.multidex
+    implementation appDependencies.butterKnife
+    implementation appDependencies.retrofit
+    implementation appDependencies.retrofit_converter_gson
+    implementation appDependencies.okhttp
+    implementation appDependencies.okhttpLogging
+    implementation appDependencies.cropView
+
+    implementation appDependencies.dexter
+    implementation appDependencies.glide
+    implementation appDependencies.iKnown
+
+    implementation appDependencies.retrofit_converter_gson
+
+    implementation 'de.hdodenhof:circleimageview:2.2.0'
+    implementation 'com.github.BrotherV:Floating-ArcMenu:1.1.0.2'
+    implementation project(path: ':duo-navigation-drawer')
+    implementation project(path: ':collapsiblecalendarview')
+    implementation 'com.devlomi.record-view:record-view:1.2.2beta'
+    implementation 'org.apache.commons:commons-io:1.3.2'
+    //implementation project(path: ':record-view')
+    //implementation appDependencies.swipelayout
+
+    //implementation appDependencies.playServicesPlus
+    //implementation appDependencies.realm
+    //implementation appDependencies.GoogleLocationandActivityRecognition
+    implementation appDependencies.dagger
+
+    implementation appDependencies.eventBus
+    implementation appDependencies.cardView
+    implementation appDependencies.constraintLayout
+    implementation appDependencies.recyclerView
+    implementation appDependencies.circleimageview
+    implementation appDependencies.fcm
+
+    annotationProcessor appDependencies.daggerCompiler
+    annotationProcessor appDependencies.butterKnifeAnnotation
+
+    //app test dependencies
+    androidTestImplementation appTestDependencies.mockito
+    androidTestImplementation appTestDependencies.dexmaker
+    androidTestImplementation appTestDependencies.dexmakerMockito
+    androidTestImplementation appTestDependencies.testingSupportLib
+    androidTestImplementation appTestDependencies.supportTestRunner
+    androidTestImplementation appTestDependencies.jUnitTest
+
+
+    androidTestImplementation(appTestDependencies.test_espresso, {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+}
+apply plugin: 'com.google.gms.google-services'

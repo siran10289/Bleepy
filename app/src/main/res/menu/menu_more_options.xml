@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".view.home.MainActivity">
+
+    <item
+        android:id="@+id/menuEditProfile"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_edit"
+        app:showAsAction="always"
+        android:visible="true"
+        android:title="@string/settings" />
+    <item
+        android:id="@+id/menuUpdate"
+        android:orderInCategory="100"
+        android:icon="@drawable/ic_save"
+        app:showAsAction="always"
+        android:visible="false"
+        android:title="@string/settings" />
+
+
+
+</menu>

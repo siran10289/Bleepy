@@ -1,0 +1,123 @@
+<resources>
+    <string name="default_notification_channel_id">default</string>
+    <string name="app_name">Bleepy</string>
+    <string name="settings">Settings</string>
+    <string name="msg_nw_connection_error">You do not have an active network connection.\n\nTurn on your mobile data or connect to a Wifi network to continue.</string>
+    <string name="title_nw_connection_error">No network connection</string>
+    <string name="ok">ok</string>
+    <!-- network related strings -->
+    <string name="timeout_error">Request timed out. Please retry</string>
+    <string name="generic_error">Unable to connect jobonji</string>
+    <string name="no_network_connection_error">No Internet connection. Make sure that Wi-Fi or celluar mobile data is turned on, then try again</string>
+    <string name="server_error">Server Error</string>
+    <string name="network_error">Server Error</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="forget_username_password">Forgot username/password?</string>
+    <string name="remember_me">Remember me</string>
+    <string name="login">Login</string>
+    <string name="need_to_bleepy">Need to bleepy!</string>
+    <string name="signup">Signup</string>
+    <string name="email">Email</string>
+    <string name="first_name">First name</string>
+    <string name="last_name">Last name</string>
+    <string name="designation">Designation</string>
+    <string name="staff">Staff #</string>
+    <string name="mobile">Mobile</string>
+    <string name="submit">Submit</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="reg_title">To signup please fill the required \n information and submitted it for approval</string>
+    <string name="profile_photo">Profile photo</string>
+    <string name="gallery">Gallery</string>
+    <string name="camera">Camera</string>
+    <string name="remove_photo">Remove photo</string>
+    <string name="cancal">Cancal</string>
+    <string name="done">Done</string>
+    <string name="rotate">Rotate</string>
+    <string name="singup">Signup</string>
+    <string name="forget_username">Forget username</string>
+    <string name="forget_password">Forget password</string>
+    <string name="enter_your_email_to_reset_your_password">Enter your email to reset your password</string>
+    <string name="select_your_device_type">Select your device type</string>
+    <string name="personal_device">Personal Device</string>
+    <string name="personal_device_title">Select this option when device is owned or will be used by only one user</string>
+    <string name="shared_device">Shared device</string>
+    <string name="shared_device_content">Select this option when devicd will be shared between many users</string>
+
+    <array name="menuOptions">
+        <item>Home</item>
+        <item>Edit Profile</item>
+        <item>Settings</item>
+        <item>Help</item>
+
+    </array>
+    <integer-array name="menuIcons">
+        <item>@drawable/ic_home</item>
+        <item>@drawable/ic_edit_profile</item>
+        <item>@drawable/ic_settings</item>
+        <item>@drawable/ic_help</item>
+    </integer-array>
+
+    //Error fields
+
+    <string name="error_enter_mobile_number">Please enter your mobile number.</string>
+    <string name="error_enter_username">Please enter your user name.</string>
+    <string name="error_enter_old_password">Please enter a old password.</string>
+    <string name="error_enter_new_password">Please enter a new password.</string>
+    <string name="error_enter_valid_password_1">Please enter a password.</string>
+    <string name="error_enter_valid_password_2">Password must be greater than 5 characters.</string>
+    <string name="error_enter_valid_password_3">Please retype your password.</string>
+    <string name="error_password_reg_ex">Password must contain minimum eight characters, at least one letter and one number</string>
+    <string name="error_password_not_match">Password and confirm password does not match</string>
+    <string name="error_enter_email">Please enter your email id.</string>
+    <string name="error_enter_valid_email">Please enter valid email id.</string>
+    <string name="error_enter_designation">Please enter your designation.</string>
+    <string name="error_enter_staffid">Please enter your staff id.</string>
+    <string name="error_enter_firstname">Please enter your first name.</string>
+    <string name="have_email">I have an email with the installation instructions</string>
+    <string name="have_reg_key">I have a registration key</string>
+    <string name="i_have_a_registration_key">I have a registration key</string>
+    <string name="i_have_a_username_and_password">I have a username and password</string>
+    <string name="call_admin">If you don\'t have any of these, please contact your system administrator</string>
+    <string name="emil_reg">To activate your bleep, please click the registration link on the email provided by system administrator</string>
+    <string name="email_registration">Email Registration</string>
+    <string name="title_personal_device">Personal device</string>
+    <string name="server_name_or_ip">Server name or IP</string>
+    <string name="registration_key">Registration key</string>
+    <string name="register">Register</string>
+    <string name="title_uname_password">Username and Password</string>
+    <string name="select_registration_type">Select Registration Type</string>
+    <string name="enter_first_name">Please enter Firstname.</string>
+    <string name="enter_last_name">Please enter Lastname.</string>
+    <string name="enter_min_character_first_name">Sorry, your firstname must be at least 3 characters long.</string>
+    <string name="enter_min_character_last_name">Sorry, your lastname must be at least 3 characters long.</string>
+    <string name="enter_min_character_password">Sorry, your password must be at least 8 characters long.</string>
+    <string name="enter_min_character_maxpassword">Sorry, your password must be max 12 characters long.</string>
+    <string name="enter_min_character_confirm_password">Sorry, your Confirm password must be at least 8 characters long.</string>
+    <string name="select_profile_picture">Please select your profile picture</string>
+    <string name="have_reg_key_title">I have Registration key</string>
+    <string name="enter_reg_key">Please enter your Registration key</string>
+    <string name="enter_server_name">Please enter Servername or IP</string>
+    <string name="getting_started">Getting Started</string>
+    <string name="welcome_to_bleepy">Welcome to Bleepy</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="sign_out">Sign out</string>
+    <string name="todo">TODO</string>
+    <string name="important_message">Important message</string>
+    <string name="my_scedule">My Schedule</string>
+    <string name="current_event">Current Event</string>
+    <string name="groups">Groups</string>
+    <string name="save">Save</string>
+    <string name="current_password">Current password</string>
+    <string name="new_password">New password</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="no_events_are_availabe">No events are available</string>
+    <string name="code_message">Code message</string>
+    <string name="play_your_recording">Play your recording</string>
+    <string name="search_the_location">Search the location</string>
+    <string name="call_for_help">Call for help</string>
+
+
+</resources>

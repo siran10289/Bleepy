@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+    >
+
+    <ImageView
+        android:id="@+id/ivImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/bg_login"
+        android:scaleType="centerCrop"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/twenty_dp"
+        android:layout_marginRight="@dimen/hundred_dp"
+        android:gravity="center|left"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/welcome_to_bleepy"
+            android:textColor="@color/white"
+            android:textSize="@dimen/twenty_five_sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tvDescrption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/twenty_dp"
+            android:text="Welcome to bleepy"
+            android:textColor="@color/white"/>
+    </LinearLayout>
+
+</FrameLayout>
