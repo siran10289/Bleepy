@@ -3,6 +3,12 @@ package bleepy.pack.com.bleepy.interactor;
 
 import android.app.Activity;
 
+import bleepy.pack.com.bleepy.models.callforhelp.CodeCreationRequest;
+import bleepy.pack.com.bleepy.models.callforhelp.CodeCreationResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.LocationsResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.PushVoiceRequest;
+import bleepy.pack.com.bleepy.models.callforhelp.TeamsResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.VoiceUpdateResponse;
 import bleepy.pack.com.bleepy.models.common.CommonRequest;
 import bleepy.pack.com.bleepy.models.common.CommonResponse;
 import bleepy.pack.com.bleepy.models.common.ImageUploadResponse;
@@ -42,14 +48,18 @@ public interface ApiInteractor {
     void uploadProfilePicture(BaseView mView, UserImageUploadRequest userImageUploadRequest, LoadListener<ImageUploadResponse> mSignupListener, boolean state);
     void updateDeviceInfo(BaseView mView, UpdateDeviceInfoReq updateDeviceInfoReq, LoadListener<UpdateDeviceInfoResponse> mSignupListener, boolean state);
     void updateRegKey(BaseView mView, UpdateRegKeyRequest updateRegKeyRequest, LoadListener<UpdateRegKeyResponse> mUpdateRegKeyResponse, boolean state);
-    void forgetCredentials(BaseView mView, ForgetCredentialsRequest forgetCredentialsRequest, LoadListener<CommonResponse> listener,int type, boolean state);
+    void forgetCredentials(BaseView mView, ForgetCredentialsRequest forgetCredentialsRequest, LoadListener<CommonResponse> listener, int type, boolean state);
     void getWelcomeScreens(BaseView mView, WelcomeScreenRequest welcomeScreenRequest, LoadListener<WelcomeScreenResponse> mUpdateRegKeyResponse, boolean state);
     void getDashboardInfo(BaseView mView, DashboardInfoRequest dashboardInfoRequest, LoadListener<DashboardInfoResponse> listener, boolean state);
-    void getMySchedules(BaseView mView, int userID,String date,LoadListener<MyScheduleListResponse> listener, boolean state);
+    void getMySchedules(BaseView mView, int userID, String date, LoadListener<MyScheduleListResponse> listener, boolean state);
     void getTeamMembers(BaseView mView, GetTeamMembersRequest getTeamMembersRequest, LoadListener<GroupMembersResponse> listener, boolean state);
-    void getPrfoileInfo(Activity activity,BaseView mView, CommonRequest commonRequest, LoadListener<UserProfileResponse> listener, boolean state);
+    void getPrfoileInfo(Activity activity, BaseView mView, CommonRequest commonRequest, LoadListener<UserProfileResponse> listener, boolean state);
     void updatePrfoileInfo(Activity activity, BaseView mView, UpdateProfileRequest commonRequest, LoadListener<UserProfileResponse> listener, boolean state);
     void changePassword(Activity activity, BaseView mView, ChangePasswordRequest commonRequest, LoadListener<CommonResponse> listener, boolean state);
+    void getLocations(Activity activity, BaseView mView, LoadListener<LocationsResponse> listener, boolean state);
+    void getTeams(Activity activity, BaseView mView, CommonRequest commonRequest, LoadListener<TeamsResponse> listener, boolean state);
+    void pushVoiceData(Activity activity, BaseView mView, PushVoiceRequest pushVoiceRequest, LoadListener<VoiceUpdateResponse> listener, boolean state);
+    void generateCode(Activity activity, BaseView mView, CodeCreationRequest codeCreationRequest, LoadListener<CodeCreationResponse> listener, boolean state);
 
 }
 

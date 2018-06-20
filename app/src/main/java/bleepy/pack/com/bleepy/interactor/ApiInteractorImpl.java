@@ -1,7 +1,14 @@
 package bleepy.pack.com.bleepy.interactor;
 import android.app.Activity;
+import android.speech.tts.Voice;
 
 import bleepy.pack.com.bleepy.apiservice.Api;
+import bleepy.pack.com.bleepy.models.callforhelp.CodeCreationRequest;
+import bleepy.pack.com.bleepy.models.callforhelp.CodeCreationResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.LocationsResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.PushVoiceRequest;
+import bleepy.pack.com.bleepy.models.callforhelp.TeamsResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.VoiceUpdateResponse;
 import bleepy.pack.com.bleepy.models.common.CommonRequest;
 import bleepy.pack.com.bleepy.models.common.CommonResponse;
 import bleepy.pack.com.bleepy.models.common.ImageUploadResponse;
@@ -145,6 +152,34 @@ public class ApiInteractorImpl implements ApiInteractor {
     public void changePassword(Activity activity, BaseView mView, ChangePasswordRequest commonRequest, LoadListener<CommonResponse> listener, boolean state) {
         UiCallback<CommonResponse> callback = new UiCallback(activity,mView, listener,state);
         Call<CommonResponse> call = mApi.changePassword(commonRequest);
+        callback.start(call);
+    }
+
+    @Override
+    public void getLocations(Activity activity, BaseView mView, LoadListener<LocationsResponse> listener, boolean state) {
+        UiCallback<LocationsResponse> callback = new UiCallback(activity,mView, listener,state);
+        Call<LocationsResponse> call = mApi.getLocations();
+        callback.start(call);
+    }
+
+    @Override
+    public void getTeams(Activity activity, BaseView mView, CommonRequest commonRequest, LoadListener<TeamsResponse> listener, boolean state) {
+        UiCallback<TeamsResponse> callback = new UiCallback(activity,mView, listener,state);
+        Call<TeamsResponse> call = mApi.getTeams(commonRequest);
+        callback.start(call);
+    }
+
+    @Override
+    public void pushVoiceData(Activity activity, BaseView mView, PushVoiceRequest pushVoiceRequest, LoadListener<VoiceUpdateResponse> listener, boolean state) {
+        UiCallback<VoiceUpdateResponse> callback = new UiCallback(activity,mView, listener,state);
+        Call<VoiceUpdateResponse> call = mApi.pushVoiceData(pushVoiceRequest);
+        callback.start(call);
+    }
+
+    @Override
+    public void generateCode(Activity activity, BaseView mView, CodeCreationRequest codeCreationRequest, LoadListener<CodeCreationResponse> listener, boolean state) {
+        UiCallback<CodeCreationResponse> callback = new UiCallback(activity,mView, listener,state);
+        Call<CodeCreationResponse> call = mApi.createCode(codeCreationRequest);
         callback.start(call);
     }
 

@@ -5,17 +5,31 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import java.util.List;
+
 import bleepy.pack.com.bleepy.R;
+import bleepy.pack.com.bleepy.models.callforhelp.LocationsResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.TeamsResponse;
+import bleepy.pack.com.bleepy.view.adapter.LocationsAdapter;
+import bleepy.pack.com.bleepy.view.adapter.TeamsAdapter;
+import bleepy.pack.com.bleepy.view.team.GroupMembersActivity;
 
 import static bleepy.pack.com.bleepy.utils.Constants.ALERT_INTENT_CAMERA;
 import static bleepy.pack.com.bleepy.utils.Constants.ALERT_INTENT_GALLERY;
@@ -175,6 +189,95 @@ public class AppDialogManager {
 
 
         deviceTypeDialog.show();
+    }
+    public static void showLocationSearchDialog(final Activity activity, Object object, List<LocationsResponse.Datum> locationList)  {
+        final DialogListener.CallForHelpListener mCallback;
+        LocationsAdapter locationsAdapter;
+        try {
+            mCallback = (DialogListener.CallForHelpListener) object;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(object.toString() + " must implement DialogListener");
+        }
+        Dialog locationSelectDialog = new Dialog(activity);
+        locationSelectDialog.getWindow().setBackgroundDrawableResource(R.color.black_translucent);
+        locationSelectDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        locationSelectDialog.setCancelable(true);
+        locationSelectDialog.setContentView(R.layout.dialog_select_locations);
+        locationSelectDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+        EditText etSearchLocations=locationSelectDialog.findViewById(R.id.etSearchLocations);
+        RecyclerView rvLocations=locationSelectDialog.findViewById(R.id.rvLocations);
+        rvLocations.setHasFixedSize(true);
+        rvLocations.setLayoutManager(new LinearLayoutManager(activity));
+        locationsAdapter=new LocationsAdapter(activity,locationList, locationSelectDialog,(LocationsAdapter.ItemListener) activity);
+        rvLocations.setAdapter(locationsAdapter);
+
+        etSearchLocations.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                locationsAdapter.getFilter().filter(s.toString().trim());
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        locationSelectDialog.show();
+    }
+    public static void showTeamSearchDialog(final Activity activity, Object object, List<TeamsResponse.Datum> locationList) {
+        final DialogListener.CallForHelpListener mCallback;
+        TeamsAdapter teamsAdapter;
+        try {
+            mCallback = (DialogListener.CallForHelpListener) object;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(object.toString() + " must implement DialogListener");
+        }
+        Dialog locationSelectDialog = new Dialog(activity);
+        locationSelectDialog.getWindow().setBackgroundDrawableResource(R.color.black_translucent);
+        locationSelectDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        locationSelectDialog.setCancelable(true);
+        locationSelectDialog.setContentView(R.layout.dialog_select_teams);
+        locationSelectDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+        EditText etSearchTeams=locationSelectDialog.findViewById(R.id.etSearchTeams);
+        Button btnSubmit=locationSelectDialog.findViewById(R.id.btnSubmit);
+        RecyclerView rvTeams=locationSelectDialog.findViewById(R.id.rvTeams);
+        rvTeams.setHasFixedSize(true);
+        rvTeams.setLayoutManager(new LinearLayoutManager(activity));
+        teamsAdapter=new TeamsAdapter(activity,locationList);
+        rvTeams.setAdapter(teamsAdapter);
+        etSearchTeams.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                teamsAdapter.getFilter().filter(s.toString().trim());
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                locationSelectDialog.dismiss();
+                mCallback.onTeamsSelected(teamsAdapter.getSelectedTeamsList());
+            }
+        });
+
+        locationSelectDialog.show();
     }
 
 

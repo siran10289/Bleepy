@@ -3,6 +3,12 @@ package bleepy.pack.com.bleepy.apiservice;
 
 
 
+import bleepy.pack.com.bleepy.models.callforhelp.CodeCreationRequest;
+import bleepy.pack.com.bleepy.models.callforhelp.CodeCreationResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.LocationsResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.PushVoiceRequest;
+import bleepy.pack.com.bleepy.models.callforhelp.TeamsResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.VoiceUpdateResponse;
 import bleepy.pack.com.bleepy.models.common.CommonRequest;
 import bleepy.pack.com.bleepy.models.common.CommonResponse;
 import bleepy.pack.com.bleepy.models.common.ImageUploadResponse;
@@ -67,6 +73,14 @@ public interface Api {
     Call<UserProfileResponse> updateUserProfileInfo(@Body UpdateProfileRequest userProfileResponse);
     @POST("updatesettings")
     Call<CommonResponse> changePassword(@Body ChangePasswordRequest userProfileResponse);
+    @POST("fetchlocationdetails")
+    Call<LocationsResponse> getLocations();
+    @POST("fetchteamdetails")
+    Call<TeamsResponse> getTeams(@Body CommonRequest userProfileResponse);
+    @POST("pushvoicedata")
+    Call<VoiceUpdateResponse> pushVoiceData(@Body PushVoiceRequest pushVoiceRequest);
+    @POST("generatecode")
+    Call<CodeCreationResponse> createCode(@Body CodeCreationRequest pushVoiceRequest);
 
 
     /*@PUT("update-email")

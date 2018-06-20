@@ -94,17 +94,23 @@
                 android:textSize="@dimen/sixteen_sp"
                 android:textStyle="bold"
                 android:text="@string/important_message"/>
-            <TextView
-                android:id="@+id/tvMessage"
-                android:layout_width="@dimen/one_twenty_dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
-                android:textColor="@color/textColorPrimary"
-                android:textSize="@dimen/thireen_sp"
-                android:layout_marginTop="@dimen/five_dp"
-                android:maxLines="8"
-                android:text="@string/welcome_to_bleepy"/>
+            <android.support.v4.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/tvMessage"
+                    android:layout_width="@dimen/one_twenty_dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textColor="@color/textColorPrimary"
+                    android:textSize="@dimen/thireen_sp"
+                    android:layout_marginTop="@dimen/five_dp"
+                    android:maxLines="8"
+                    android:text="@string/welcome_to_bleepy"/>
+
+            </android.support.v4.widget.NestedScrollView>
+
 
         </LinearLayout>
 

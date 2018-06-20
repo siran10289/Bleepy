@@ -7,8 +7,18 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import bleepy.pack.com.bleepy.R;
 import bleepy.pack.com.bleepy.interactor.ApiInteractor;
+import bleepy.pack.com.bleepy.models.callforhelp.CodeCreationRequest;
+import bleepy.pack.com.bleepy.models.callforhelp.CodeCreationResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.LocationsResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.PushVoiceRequest;
+import bleepy.pack.com.bleepy.models.callforhelp.TeamsResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.VoiceUpdateResponse;
 import bleepy.pack.com.bleepy.models.common.CommonRequest;
 import bleepy.pack.com.bleepy.models.common.CommonResponse;
 import bleepy.pack.com.bleepy.models.dashboard.ChangePasswordRequest;
@@ -20,6 +30,7 @@ import bleepy.pack.com.bleepy.models.myschedule.MyScheduleListResponse;
 import bleepy.pack.com.bleepy.models.signup.UpdateDeviceInfoResponse;
 import bleepy.pack.com.bleepy.models.team.GetTeamMembersRequest;
 import bleepy.pack.com.bleepy.models.team.GroupMembersResponse;
+import bleepy.pack.com.bleepy.utils.Validation;
 import bleepy.pack.com.bleepy.utils.preferences.PrefsManager;
 import bleepy.pack.com.bleepy.view.base.BaseView;
 import bleepy.pack.com.bleepy.view.base.LoadListener;
@@ -43,6 +54,7 @@ public class DashboardPresenterImpl implements DashboardContract.Presenter {
     private DashboardContract.GroupMembersView mGroupMembersView;
     private DashboardContract.ProfileView mProfileView;
     private DashboardContract.SettingsView mSettingsView;
+    private DashboardContract.CallForHelpView mCallForHelpView;
     private Activity mActivity;
 
     public DashboardPresenterImpl(Activity activity,Context context, ApiInteractor apiInteractor, PrefsManager prefsManager, PackageInfoInteractor mPackageInfoInteractor) {
@@ -79,6 +91,18 @@ public class DashboardPresenterImpl implements DashboardContract.Presenter {
     @Override
     public void setSettingsView(DashboardContract.SettingsView settingsView) {
          this.mSettingsView=settingsView;
+    }
+
+    @Override
+    public void setCallForHelpView(DashboardContract.CallForHelpView callForHelpView) {
+        this.mCallForHelpView=callForHelpView;
+    }
+
+    @Override
+    public void pushVoiceData(String voiceBase64) {
+        PushVoiceRequest pushVoiceRequest=new PushVoiceRequest();
+        pushVoiceRequest.setVoiceRecord(voiceBase64);
+        mApiInteractor.pushVoiceData(mActivity,mCallForHelpView,pushVoiceRequest,mVoiceUpdateResponseLoadListener,true);
     }
 
     @Override
@@ -147,6 +171,62 @@ public class DashboardPresenterImpl implements DashboardContract.Presenter {
         }
 
 
+    }
+
+    @Override
+    public void getLocations() {
+        mApiInteractor.getLocations(mActivity,mCallForHelpView,mLocationsResponseLoadListener,true);
+    }
+
+    @Override
+    public void getTeams() {
+      CommonRequest commonRequest=new CommonRequest();
+      commonRequest.setUserid(mPrefsManager.getIntKeyValueFromPrefsByKey(KEY_USERID));
+      mApiInteractor.getTeams(mActivity,mCallForHelpView,commonRequest,mTeamsResponseLoadListener,true);
+
+    }
+
+    @Override
+    public void generateCode() {
+        if(isInputsValidatedWithNoErrors()) {
+            CodeCreationRequest codeCreationRequest = new CodeCreationRequest();
+            codeCreationRequest.setUserid(String.valueOf(mPrefsManager.getIntKeyValueFromPrefsByKey(KEY_USERID)));
+            codeCreationRequest.setDescription(mCallForHelpView.getDescription());
+            if(mCallForHelpView.getVoiceDataUrl()!=null){
+                codeCreationRequest.setCodeVoicePath(mCallForHelpView.getVoiceDataUrl());
+            }
+            codeCreationRequest.setLocationID(mCallForHelpView.getLocationID());
+            codeCreationRequest.setTeamID(mCallForHelpView.getTeamID());
+            codeCreationRequest.setCodeCreatedOnDate(getDate());
+            codeCreationRequest.setCodeCreatedOnTime(getTime());
+            Log.e("Request:",new Gson().toJson(codeCreationRequest).toString());
+            mApiInteractor.generateCode(mActivity,mCallForHelpView,codeCreationRequest,mCodeCreationResponseLoadListener,true);
+
+
+        }
+    }
+    private String getDate(){
+        Date cDate = Calendar.getInstance().getTime();
+        return new SimpleDateFormat("yyyy-MM-dd").format(cDate);
+    }
+    private String getTime(){
+        Date cDate = Calendar.getInstance().getTime();
+        return new SimpleDateFormat("hh:mm:ss").format(cDate);
+    }
+
+    private Boolean isInputsValidatedWithNoErrors() {
+        Boolean isError = false;
+        if (Validation.isEmpty(mCallForHelpView.getDescription())) {
+            mCallForHelpView.showErrorDialog(mContext.getString(R.string.please_enter_description));
+            isError = true;
+        } else if (Validation.isEmpty(mCallForHelpView.getLocationID())) {
+            isError = true;
+            mCallForHelpView.showErrorDialog(mContext.getString(R.string.choose_your_location));
+        }else if (Validation.isEmpty(mCallForHelpView.getTeamID())) {
+            isError = true;
+            mCallForHelpView.showErrorDialog(mContext.getString(R.string.select_teams));
+        }
+        return !isError;
     }
 
     @Override
@@ -377,5 +457,122 @@ public class DashboardPresenterImpl implements DashboardContract.Presenter {
 
         }
     };
+
+    LoadListener<LocationsResponse> mLocationsResponseLoadListener = new LoadListener<LocationsResponse>() {
+        @Override
+        public void onSuccess(LocationsResponse responseBody) {
+
+            if (responseBody != null) {
+                switch (responseBody.getMeta().getStatusType()) {
+                    case STATUS_SUCCESS:
+                        mCallForHelpView.setLocations(responseBody);
+                        break;
+                    case STATUS_FAILURE:
+                        mCallForHelpView.showErrorDialog(responseBody.getMeta().getMessage());
+                        break;
+                }
+
+            }
+
+        }
+
+        @Override
+        public void onFailure(Throwable t) {
+
+        }
+
+        @Override
+        public void onError(Object error) {
+
+        }
+    };
+    LoadListener<TeamsResponse> mTeamsResponseLoadListener = new LoadListener<TeamsResponse>() {
+        @Override
+        public void onSuccess(TeamsResponse responseBody) {
+
+            if (responseBody != null) {
+                switch (responseBody.getMeta().getStatusType()) {
+                    case STATUS_SUCCESS:
+                        mCallForHelpView.setTeams(responseBody);
+                        break;
+                    case STATUS_FAILURE:
+                        mCallForHelpView.showErrorDialog(responseBody.getMeta().getMessage());
+                        break;
+                }
+
+            }
+
+        }
+
+        @Override
+        public void onFailure(Throwable t) {
+
+        }
+
+        @Override
+        public void onError(Object error) {
+
+        }
+    };
+
+    LoadListener<VoiceUpdateResponse> mVoiceUpdateResponseLoadListener = new LoadListener<VoiceUpdateResponse>() {
+        @Override
+        public void onSuccess(VoiceUpdateResponse responseBody) {
+
+            if (responseBody != null) {
+                switch (responseBody.getMeta().getStatusType()) {
+                    case STATUS_SUCCESS:
+                        mCallForHelpView.setVoiceDataUrl(responseBody);
+                        break;
+                    case STATUS_FAILURE:
+                        mCallForHelpView.showErrorDialog(responseBody.getMeta().getMessage());
+                        break;
+                }
+
+            }
+
+        }
+
+        @Override
+        public void onFailure(Throwable t) {
+
+        }
+
+        @Override
+        public void onError(Object error) {
+
+        }
+    };
+    LoadListener<CodeCreationResponse> mCodeCreationResponseLoadListener = new LoadListener<CodeCreationResponse>() {
+        @Override
+        public void onSuccess(CodeCreationResponse responseBody) {
+
+            if (responseBody != null) {
+                switch (responseBody.getMeta().getStatusType()) {
+                    case STATUS_SUCCESS:
+                        mCallForHelpView.setCodeCreationResponse(responseBody);
+                        break;
+                    case STATUS_FAILURE:
+                        mCallForHelpView.showErrorDialog(responseBody.getMeta().getMessage());
+                        break;
+                }
+
+            }
+
+        }
+
+        @Override
+        public void onFailure(Throwable t) {
+
+        }
+
+        @Override
+        public void onError(Object error) {
+
+        }
+    };
+
+
+
 
 }

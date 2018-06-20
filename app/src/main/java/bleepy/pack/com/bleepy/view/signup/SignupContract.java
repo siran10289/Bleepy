@@ -56,7 +56,7 @@ public interface SignupContract {
         void snapPhotoClick();
         void pickFromGalleryClick();
         void uploadUserImage(String base64);
-        void updateDeviceInfo(String deviceType,String fcmToken);
+        void updateDeviceInfo(String deviceType, String fcmToken);
         void onActivityResult(int requestCode, int resultCode, Intent intent);
         void haveEmailID(String userRegType);
         void hasRegistrationKey();

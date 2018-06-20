@@ -35,11 +35,11 @@ public interface SigninContract {
         void setForgetPasswordView(ForgotPasswordView forgetPasswordView);
         void validateUserLogin(String userName, String passWord);
         void forgotUserNamePassword(String dialCode, String mobileNumber, String emailID, String otp);
-        void checkOldCredentials(EditText etUserName,EditText etPassword);
-        void saveCredentials(String userName,String password);
+        void checkOldCredentials(EditText etUserName, EditText etPassword);
+        void saveCredentials(String userName, String password);
         void onActivityResult(int requestCode, int resultCode, Intent intent);
         void onForgetCredentials(int type);
-        void updateDeviceInfo(String fcmToken,String deviceType);
+        void updateDeviceInfo(String fcmToken, String deviceType);
 
     }
 

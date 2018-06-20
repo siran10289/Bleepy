@@ -15,12 +15,17 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatSeekBar;
+import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -37,13 +42,29 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+
+import javax.inject.Inject;
 
 import bleepy.pack.com.bleepy.MainActivity;
 import bleepy.pack.com.bleepy.R;
+import bleepy.pack.com.bleepy.di.component.DaggerDashboardComponent;
+import bleepy.pack.com.bleepy.di.component.DashboardComponent;
+import bleepy.pack.com.bleepy.di.module.DashboardModule;
+import bleepy.pack.com.bleepy.models.callforhelp.CodeCreationResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.LocationsResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.TeamsResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.VoiceUpdateResponse;
+import bleepy.pack.com.bleepy.utils.customdialog.AppDialogManager;
+import bleepy.pack.com.bleepy.utils.customdialog.DialogListener;
+import bleepy.pack.com.bleepy.view.Dashboard.DashboardContract;
+import bleepy.pack.com.bleepy.view.adapter.LocationsAdapter;
 import bleepy.pack.com.bleepy.view.base.BaseActivity;
 import butterknife.BindView;
 import butterknife.OnClick;
+import butterknife.OnTouch;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
@@ -53,7 +74,13 @@ import static bleepy.pack.com.bleepy.utils.AppUtils.expand;
 import static bleepy.pack.com.bleepy.utils.AppUtils.stringForTime;
 import static bleepy.pack.com.bleepy.utils.Constants.AUDIO_PATH;
 
-public class CallForHelpActivity extends BaseActivity implements MediaPlayer.OnCompletionListener {
+public class CallForHelpActivity extends BaseActivity implements
+        MediaPlayer.OnCompletionListener,DialogListener.CallForHelpListener,
+        DashboardContract.CallForHelpView,LocationsAdapter.ItemListener {
+
+    @Inject
+    DashboardContract.Presenter mPresenter;
+    DashboardComponent mDashboardComponent;
     @BindView(R.id.record_button)RecordButton mRecordButton;
     @BindView(R.id.record_view)RecordView mRecordView;
     @BindView(R.id.toolbar)Toolbar mToolBar;
@@ -65,6 +92,9 @@ public class CallForHelpActivity extends BaseActivity implements MediaPlayer.OnC
     @BindView(R.id.tvReminingTime)TextView tvReminingTime;
     @BindView(R.id.llPalyerView)LinearLayout llPalyerView;
     @BindView(R.id.tvAudioFileName)TextView tvAudioFileName;
+    @BindView(R.id.etSearchTeams)EditText etSearchTeams;
+    @BindView(R.id.etSearchLocations)EditText etSearchLocations;
+    @BindView(R.id.etDescription)EditText etDescription;
     private static final int SHOW_PROGRESS = 2;
     private MediaRecorder myAudioRecorder;
     private String outputFile;
@@ -73,6 +103,11 @@ public class CallForHelpActivity extends BaseActivity implements MediaPlayer.OnC
     public static final int RequestPermissionCode = 1;
     public Handler mHandler = new MessageHandler();
     AudioManager audioManager;
+    List<TeamsResponse.Datum> mTeamList=new ArrayList<>();
+    List<LocationsResponse.Datum> mLocationList=new ArrayList<>();
+    String voiceDataUrl;
+    String voiceEncodedString;
+    String selectedLocationID="",selectedTeamID="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,18 +116,28 @@ public class CallForHelpActivity extends BaseActivity implements MediaPlayer.OnC
     }
     @SuppressLint("SetTextI18n")
     private void init(){
+        initComponent();
         setSupportActionBar(mToolBar);
         setDisplayHomeUp();
         toolbar_title.setText(R.string.call_for_help);
         if(checkPermission()) {
-            mRecordButton.setRecordView(mRecordView);
+
             initRcordingView();
             initMediaRecorder();
+             mPresenter.getLocations();
+             mPresenter.getTeams();
 
         }else{
             requestPermission();
         }
-
+    }
+    private void initComponent() {
+        this.mDashboardComponent = DaggerDashboardComponent.builder()
+                .applicationComponent(getApplicationComponent())
+                .dashboardModule(new DashboardModule(this))
+                .build();
+        mDashboardComponent.inject(this);
+        mPresenter.setCallForHelpView(this);
     }
     private void initMediaRecorder(){
         recordingFile = createVideoFile("AudioRecord");
@@ -105,7 +150,7 @@ public class CallForHelpActivity extends BaseActivity implements MediaPlayer.OnC
         }*/
         myAudioRecorder = new MediaRecorder();
         myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-        myAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        myAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         myAudioRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
         myAudioRecorder.setOutputFile(recordingFile.getAbsolutePath());
 
@@ -113,6 +158,7 @@ public class CallForHelpActivity extends BaseActivity implements MediaPlayer.OnC
 
     private void initRcordingView(){
         //mRecordButton.setListenForRecord(true);
+        mRecordButton.setRecordView(mRecordView);
         mRecordView.setCancelBounds(130);
         mRecordView.setSmallMicColor(Color.parseColor("#c2185b"));
         mRecordView.setLessThanSecondAllowed(false);
@@ -132,7 +178,7 @@ public class CallForHelpActivity extends BaseActivity implements MediaPlayer.OnC
                         initMediaRecorder();
                     }
                     startRecording();
-                    Toast.makeText(CallForHelpActivity.this, "OnStartRecord", Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(CallForHelpActivity.this, "OnStartRecord", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -140,7 +186,7 @@ public class CallForHelpActivity extends BaseActivity implements MediaPlayer.OnC
             @Override
             public void onCancel() {
                 Log.d("RecordView", "onCancel");
-                Toast.makeText(CallForHelpActivity.this, "onCancel", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(CallForHelpActivity.this, "onCancel", Toast.LENGTH_SHORT).show();
                 stopRecording();
                 if(recordingFile.exists()){
                     recordingFile.delete();
@@ -150,7 +196,7 @@ public class CallForHelpActivity extends BaseActivity implements MediaPlayer.OnC
             @Override
             public void onFinish(long recordTime) {
                 String time = getHumanTimeText(recordTime);
-                Toast.makeText(CallForHelpActivity.this, "onFinishRecord - Recorded Time is: " + time, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(CallForHelpActivity.this, "onFinishRecord - Recorded Time is: " + time, Toast.LENGTH_SHORT).show();
                 recordedFile=recordingFile;
                 stopRecording();
                 setRecordedAudio();
@@ -193,7 +239,7 @@ public class CallForHelpActivity extends BaseActivity implements MediaPlayer.OnC
                 return super.onOptionsItemSelected(item);
         }
     }
-    @OnClick({R.id.ivPausePlay,R.id.tvAudioFileName})
+    @OnClick({R.id.ivPausePlay,R.id.tvAudioFileName,R.id.ivFB,R.id.ivFF,R.id.btnSubmit})
     public void onViewClicked(View view){
         switch (view.getId()){
             case R.id.ivPausePlay:
@@ -230,6 +276,54 @@ public class CallForHelpActivity extends BaseActivity implements MediaPlayer.OnC
                     }
                 }
                 break;
+            case R.id.ivFB:
+                if(mediaPlayer!=null)mediaPlayer.seekTo(mediaPlayer.getCurrentPosition()-1000);
+                sbAudioPlay.setProgress(mediaPlayer.getCurrentPosition());
+                break;
+            case R.id.ivFF:
+                if(mediaPlayer!=null)mediaPlayer.seekTo(mediaPlayer.getCurrentPosition()+1000);
+                sbAudioPlay.setProgress(mediaPlayer.getCurrentPosition());
+                break;
+            case R.id.btnSubmit:
+                if(recordedFile!=null) {
+                    byte[] bytes = new byte[0];
+                    try {
+                        bytes = FileUtils.readFileToByteArray(recordedFile);
+                        voiceEncodedString = Base64.encodeToString(bytes, 0);
+                        voiceEncodedString = "data:audio/mp3;base64," + voiceEncodedString;
+                        mPresenter.pushVoiceData(voiceEncodedString);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }else{
+                    mPresenter.generateCode();
+                }
+
+                break;
+
+
+        }
+    }
+
+    @OnTouch(R.id.etSearchTeams)
+    boolean onSearchTeamsTouched(View v, MotionEvent e){
+        if(e.getAction()==MotionEvent.ACTION_DOWN) {
+            resetTeamList();
+            AppDialogManager.showTeamSearchDialog(CallForHelpActivity.this, this, mTeamList);
+        }
+        return false;
+    }
+    @OnTouch(R.id.etSearchLocations)
+    boolean onSearchLocationsTouched(View v, MotionEvent e){
+        if(e.getAction()==MotionEvent.ACTION_DOWN) {
+            AppDialogManager.showLocationSearchDialog(CallForHelpActivity.this, this, mLocationList);
+        }
+        return false;
+    }
+
+    private void resetTeamList(){
+        for(int i=0;i<mTeamList.size();i++){
+            mTeamList.get(i).setChecked(false);
         }
     }
 
@@ -289,6 +383,7 @@ public class CallForHelpActivity extends BaseActivity implements MediaPlayer.OnC
         mediaPlayer.setOnCompletionListener(this);
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         sbVolumeControl.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
+        sbVolumeControl.setProgress(100);
         sbVolumeControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
@@ -359,6 +454,69 @@ public class CallForHelpActivity extends BaseActivity implements MediaPlayer.OnC
             ivPausePlay.setImageDrawable(ContextCompat.getDrawable(this,R.drawable.ic_play));
         }
 
+    }
+    @Override
+    public void onTeamsSelected(List<TeamsResponse.Datum> selectedTeamsList) {
+        if(selectedTeamsList!=null&&selectedTeamsList.size()>0){
+            selectedTeamID=selectedTeamsList.get(0).getTeamid();
+            etSearchTeams.setText(selectedTeamsList.get(0).getTeamname());
+        }
+
+    }
+
+    @Override
+    public void setLocations(LocationsResponse locationsResponse) {
+        this.mLocationList=locationsResponse.getData();
+
+    }
+
+    @Override
+    public void setTeams(TeamsResponse teamsResponse) {
+        if(teamsResponse!=null&&teamsResponse.getData().size()>0) {
+            /*ArrayAdapter<TeamsResponse.Datum> adapter =
+                    new ArrayAdapter<TeamsResponse.Datum>(CallForHelpActivity.this, android.R.layout.simple_spinner_dropdown_item, teamsResponse.getData());
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            sprTeams.setAdapter(adapter);*/
+            this.mTeamList=teamsResponse.getData();
+
+        }
+    }
+
+    @Override
+    public void setVoiceDataUrl(VoiceUpdateResponse updateResponse) {
+        this.voiceDataUrl=updateResponse.getData().getVoiceRecord();
+        mPresenter.generateCode();
+    }
+
+    @Override
+    public void setCodeCreationResponse(CodeCreationResponse response) {
+        showErrorDialog(response.getMeta().getMessage());
+    }
+
+    @Override
+    public String getDescription() {
+        return etDescription.getText().toString().trim() ;
+    }
+
+    @Override
+    public String getVoiceDataUrl() {
+        return voiceDataUrl;
+    }
+
+    @Override
+    public String getLocationID() {
+        return selectedLocationID;
+    }
+
+    @Override
+    public String getTeamID() {
+        return selectedTeamID;
+    }
+
+    @Override
+    public void onLocationSelected(LocationsResponse.Datum location, int position) {
+        selectedLocationID=location.getLocationid();
+        etSearchLocations.setText(location.getLocationname());
     }
 
     private  class MessageHandler extends Handler {

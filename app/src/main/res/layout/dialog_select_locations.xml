@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_marginTop="@dimen/fifty_dp"
+              android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/etSearchLocations"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/forty_dp"
+        android:paddingLeft="@dimen/ten_dp"
+        android:layout_margin="@dimen/ten_dp"
+        android:drawablePadding="@dimen/ten_dp"
+        android:drawableLeft="@drawable/ic_search"
+        android:hint="@string/search_locations"
+        android:background="@drawable/round_rect_white"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvLocations"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/ten_dp">
+
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>

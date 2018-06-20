@@ -3,6 +3,10 @@ package bleepy.pack.com.bleepy.view.Dashboard;
 import android.content.Intent;
 import android.widget.EditText;
 
+import bleepy.pack.com.bleepy.models.callforhelp.CodeCreationResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.LocationsResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.TeamsResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.VoiceUpdateResponse;
 import bleepy.pack.com.bleepy.models.common.WelcomeScreenResponse;
 import bleepy.pack.com.bleepy.models.dashboard.DashboardInfoResponse;
 import bleepy.pack.com.bleepy.models.dashboard.UserProfileResponse;
@@ -42,6 +46,18 @@ public interface DashboardContract {
         String getNewPassword();
         String getConfirmPassword();
     }
+    interface CallForHelpView extends BaseView{
+        void setLocations(LocationsResponse locationsResponse);
+        void setTeams(TeamsResponse teamsResponse);
+        void setVoiceDataUrl(VoiceUpdateResponse updateResponse);
+        void setCodeCreationResponse(CodeCreationResponse response);
+        String getDescription();
+        String getVoiceDataUrl();
+        String getLocationID();
+        String getTeamID();
+
+
+    }
     interface Presenter extends BasePresenter {
 
         void setDashboardView(DashboardView dashboardView);
@@ -49,6 +65,8 @@ public interface DashboardContract {
         void setGroupMembersView(GroupMembersView groupMembersView);
         void setProfileView(ProfileView profileView);
         void setSettingsView(SettingsView settingsView);
+        void setCallForHelpView(CallForHelpView callForHelpView);
+        void pushVoiceData(String voiceBase64);
         void getUserDashboardInfo();
         void signOutClicked();
         void getMySchedules();
@@ -56,6 +74,10 @@ public interface DashboardContract {
         void getProfileInfo();
         void updateProfileInfo();
         void changePassword();
+        void getLocations();
+        void getTeams();
+        void generateCode();
+
 
 
     }

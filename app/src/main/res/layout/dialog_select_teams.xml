@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_marginTop="@dimen/fifty_dp"
+              android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/etSearchTeams"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/forty_dp"
+        android:layout_margin="@dimen/ten_dp"
+        android:background="@drawable/round_rect_white"
+        android:drawableLeft="@drawable/ic_search"
+        android:drawablePadding="@dimen/ten_dp"
+        android:hint="@string/search_locations"
+        android:paddingLeft="@dimen/ten_dp"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rvTeams"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginTop="@dimen/ten_dp">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/forty_dp"
+        android:layout_margin="@dimen/ten_dp"
+        android:background="@drawable/bg_login_submit"
+        android:text="@string/submit"
+        android:textColor="@color/white"/>
+
+</LinearLayout>

@@ -1090,7 +1090,7 @@ public class AppUtils {
         storageDir.mkdirs();
         File videoFile = null;
         try {
-            videoFile = File.createTempFile(fileName, ".3gp", storageDir);
+            videoFile = File.createTempFile(fileName, ".mp3", storageDir);
 
         } catch (Exception e) {
             Log.e("Exception:",e.toString());
