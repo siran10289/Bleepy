@@ -1,5 +1,6 @@
 package bleepy.pack.com.bleepy.view.signin;
 
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -52,16 +53,16 @@ public class ForgetCredentialsActivity extends BaseActivity implements SigninCon
         switch (view.getId()) {
             case R.id.rbForgetUN:
                 if (rbForgetUN.isChecked()) {
-                    rbForgetUN.setTextColor(getColor(R.color.white));
-                    rbForgetPswd.setTextColor(getColor(R.color.light_lavendor_color));
+                    rbForgetUN.setTextColor(ContextCompat.getColor(ForgetCredentialsActivity.this,R.color.white));
+                    rbForgetPswd.setTextColor(ContextCompat.getColor(ForgetCredentialsActivity.this,R.color.light_lavendor_color));
                     type=0;
 
                 }
                 break;
             case R.id.rbForgetPswd:
                 if (rbForgetPswd.isChecked()) {
-                    rbForgetUN.setTextColor(getColor(R.color.light_lavendor_color));
-                    rbForgetPswd.setTextColor(getColor(R.color.white));
+                    rbForgetUN.setTextColor(ContextCompat.getColor(ForgetCredentialsActivity.this,R.color.light_lavendor_color));
+                    rbForgetPswd.setTextColor(ContextCompat.getColor(ForgetCredentialsActivity.this,R.color.white));
                     type=1;
 
                 }

@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
@@ -32,6 +33,7 @@ import bleepy.pack.com.bleepy.view.base.BaseActivity;
 import bleepy.pack.com.bleepy.view.signup.SignupContract;
 
 import static bleepy.pack.com.bleepy.BleepyApplication.refreshedFCMToken;
+import static bleepy.pack.com.bleepy.utils.Constants.FCM_BUNDLE;
 import static bleepy.pack.com.bleepy.utils.Constants.KEY_IS_VALID_USER;
 import static bleepy.pack.com.bleepy.utils.Constants.KEY_MY_OBJ;
 import static bleepy.pack.com.bleepy.utils.Constants.KEY_USERID;
@@ -45,6 +47,7 @@ public class SplashScreenActivity extends BaseActivity implements SignupContract
     SignupContract.Presenter mPresenter;
     private SignupComponent signupComponent;
     PrefsManagerImpl mPrefsManager;
+    Bundle mFCMBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +57,11 @@ public class SplashScreenActivity extends BaseActivity implements SignupContract
 
     }
     private void init(){
+        if(getIntent().getExtras()!=null){
+            mFCMBundle=getIntent().getExtras();
+        }
         refreshedFCMToken = FirebaseInstanceId.getInstance().getToken();
+        Log.e("FCMToken:",refreshedFCMToken+"");
         mPrefsManager=PrefsManagerImpl.getInstance(SplashScreenActivity.this);
         initComponent();
         mPresenter.getWelcomeScreens();
@@ -81,7 +88,10 @@ public class SplashScreenActivity extends BaseActivity implements SignupContract
     public void navigateToWelcomeScreen(WelcomeScreenResponse welcomeScreenResponse) {
         if (mPrefsManager.getBooleanKeyValueFromPrefs(KEY_IS_VALID_USER)) {
             mIntent = new Intent(SplashScreenActivity.this, DashboardActivity.class);
-            mIntent.putExtra(KEY_USERID,mPrefsManager.getIntKeyValueFromPrefsByKey(KEY_USERID));
+            //mIntent.putExtra(KEY_USERID,mPrefsManager.getIntKeyValueFromPrefsByKey(KEY_USERID));
+            if(mFCMBundle!=null) {
+                mIntent.putExtra(FCM_BUNDLE, mFCMBundle);
+            }
             startActivity(mIntent);
             finish();
         } else {

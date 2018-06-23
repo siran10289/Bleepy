@@ -5,8 +5,13 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.media.MediaPlayer;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -21,22 +26,34 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import bleepy.pack.com.bleepy.R;
 import bleepy.pack.com.bleepy.models.callforhelp.LocationsResponse;
 import bleepy.pack.com.bleepy.models.callforhelp.TeamsResponse;
+import bleepy.pack.com.bleepy.models.common.EmergencyCode;
 import bleepy.pack.com.bleepy.view.adapter.LocationsAdapter;
 import bleepy.pack.com.bleepy.view.adapter.TeamsAdapter;
+import bleepy.pack.com.bleepy.view.callforhelp.CallForHelpActivity;
 import bleepy.pack.com.bleepy.view.team.GroupMembersActivity;
 
+import static bleepy.pack.com.bleepy.utils.AppUtils.stringForTime;
 import static bleepy.pack.com.bleepy.utils.Constants.ALERT_INTENT_CAMERA;
 import static bleepy.pack.com.bleepy.utils.Constants.ALERT_INTENT_GALLERY;
 import static bleepy.pack.com.bleepy.utils.Constants.ALERT_REMOVE;
 
 public class AppDialogManager {
     static Dialog networkAlertDialog = null;
+    static MediaPlayer mediaPlayer=new MediaPlayer();;
+    private static final int SHOW_PROGRESS = 2;
+    static AppCompatSeekBar seekBar;
+    static TextView tvCurrentTime;
+    public static Handler mHandler = new MessageHandler();
+    public static Dialog confirmationDialog;
 
     public static void showAlertDialog(final Activity activity, String message,String type,boolean isCancelNeeded) {
 
@@ -279,6 +296,191 @@ public class AppDialogManager {
 
         locationSelectDialog.show();
     }
+    static int duration;
+    static int amoungToupdate;
+    static  Runnable runnable;
+    public static void showWaitingAcceptanceDialog(final Activity activity, Object object, EmergencyCode emergencyCode) {
+        final DialogListener.BaseListener mCallback;
+        try {
+            mCallback = (DialogListener.BaseListener) object;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(object.toString() + " must implement DialogListener");
+        }
+
+        Dialog dialog = new Dialog(activity);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.dialog_waiting_acceptance);
+        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        TextView tvDescription=dialog.findViewById(R.id.tv_dialog_description);
+        TextView tvResponders=dialog.findViewById(R.id.tvResponders);
+        TextView tvLocation=dialog.findViewById(R.id.tvLocation);
+        Button btnAccept=dialog.findViewById(R.id.btnAccept);
+        Button btnReject=dialog.findViewById(R.id.btnReject);
+        ImageView ivPlay=dialog.findViewById(R.id.ivPlay);
+        seekBar=dialog.findViewById(R.id.seekBar);
+        tvCurrentTime=dialog.findViewById(R.id.tvCurrentTime);
+        LinearLayout llAudioPlayer=dialog.findViewById(R.id.llAudioPlayer);
+        tvDescription.setText(emergencyCode.getDescription()+"");
+        tvLocation.setText(emergencyCode.getLocation()+"");
+        if(emergencyCode.getResponseCount()!=null) {
+            tvResponders.setText("(" + emergencyCode.getResponseCount() + ")R");
+        }else{
+            tvResponders.setVisibility(View.GONE);
+        }
+        if(emergencyCode.getVoiceData()!=null) {
+            try {
+                llAudioPlayer.setVisibility(View.VISIBLE);
+                mediaPlayer.setDataSource(emergencyCode.getVoiceData());
+                mediaPlayer.prepare();
+                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mp) {
+                         duration = mediaPlayer.getDuration();
+                         amoungToupdate = duration / 100;
+                         seekBar.setMax(duration);
+                    }
+                });
+                mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        seekBar.setProgress(0);
+                    }
+                });
+
+            } catch (Exception e) {
+
+            }
+            ivPlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(mediaPlayer.isPlaying()) {
+                        ivPlay.setImageDrawable(ContextCompat.getDrawable(activity,R.drawable.ic_play));
+                        mHandler.removeMessages(SHOW_PROGRESS);
+                        if(mediaPlayer!=null)mediaPlayer.pause();
+
+
+                    }else{
+                        ivPlay.setImageDrawable(ContextCompat.getDrawable(activity,R.drawable.ic_pause));
+                        mediaPlayer.start();
+                        mHandler.sendEmptyMessage(SHOW_PROGRESS);
+                    }
+                }
+            });
+
+        }else{
+            llAudioPlayer.setVisibility(View.GONE);
+        }
+        btnAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+               mCallback.onAcceptClicked(emergencyCode);
+            }
+        });
+        btnReject.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               mCallback.onRejectClicked();
+            }
+        });
+
+        dialog.show();
+    }
+
+    public static void showRejectionReasonDialog(final Activity activity, Object object) {
+        final DialogListener.BaseListener mCallback;
+        try {
+            mCallback = (DialogListener.BaseListener) object;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(object.toString() + " must implement DialogListener");
+        }
+
+        Dialog rejectionReasonDialog = new Dialog(activity);
+        rejectionReasonDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        rejectionReasonDialog.setCancelable(true);
+        rejectionReasonDialog.setContentView(R.layout.dialog_rejection_reason);
+        rejectionReasonDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        Button btnAccept=rejectionReasonDialog.findViewById(R.id.btnAccept);
+        Button btnCancel=rejectionReasonDialog.findViewById(R.id.btnCancel);
+        btnAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        rejectionReasonDialog.show();
+    }
+    public static void showConfirmationDialog(final Activity activity, Object object) {
+        final DialogListener.BaseListener mCallback;
+        try {
+            mCallback = (DialogListener.BaseListener) object;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(object.toString() + " must implement DialogListener");
+        }
+
+        confirmationDialog = new Dialog(activity);
+        confirmationDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        confirmationDialog.setCancelable(true);
+        confirmationDialog.setContentView(R.layout.dialog_confirmation);
+        confirmationDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        Button btnAccept=confirmationDialog.findViewById(R.id.btnAccept);
+        Button btnCancel=confirmationDialog.findViewById(R.id.btnCancel);
+        btnAccept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmationDialog.dismiss();
+                mCallback.confirmClicked();
+            }
+        });
+        btnCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                confirmationDialog.dismiss();
+               mCallback.CancelClicked();
+            }
+        });
+
+        confirmationDialog.show();
+    }
+    private static class MessageHandler extends Handler {
+
+
+        @Override
+        public void handleMessage(Message msg) {
+
+            if (mediaPlayer==null) {
+                return;
+            }
+
+            int pos;
+            switch (msg.what) {
+
+                case SHOW_PROGRESS:
+                    pos= setProgress();
+                    if (mediaPlayer.isPlaying()) {
+                        msg = obtainMessage(SHOW_PROGRESS);
+                        sendMessageDelayed(msg, 10 - (pos % 10));
+                    }
+                    break;
+            }
+        }
+    }
+    private static int setProgress(){
+        int position = mediaPlayer.getCurrentPosition();
+        seekBar.setProgress(position);
+        tvCurrentTime.setText(stringForTime(position));
+        return position;
+
+    }
+
 
 
 }

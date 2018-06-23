@@ -38,8 +38,10 @@ import bleepy.pack.com.bleepy.R;
 import bleepy.pack.com.bleepy.di.component.DaggerDashboardComponent;
 import bleepy.pack.com.bleepy.di.component.DashboardComponent;
 import bleepy.pack.com.bleepy.di.module.DashboardModule;
+import bleepy.pack.com.bleepy.models.common.EmergencyCode;
 import bleepy.pack.com.bleepy.models.common.MenuItem;
 import bleepy.pack.com.bleepy.models.dashboard.DashboardInfoResponse;
+import bleepy.pack.com.bleepy.utils.customdialog.DialogListener;
 import bleepy.pack.com.bleepy.view.adapter.NavDrawerAdapter;
 import bleepy.pack.com.bleepy.view.base.BaseActivity;
 import bleepy.pack.com.bleepy.view.callforhelp.CallForHelpActivity;
@@ -51,10 +53,20 @@ import nl.psdcompany.duonavigationdrawer.views.DuoDrawerLayout;
 import nl.psdcompany.duonavigationdrawer.views.DuoMenuView;
 import nl.psdcompany.duonavigationdrawer.widgets.DuoDrawerToggle;
 
+import static bleepy.pack.com.bleepy.utils.Constants.FCM_BUNDLE;
+import static bleepy.pack.com.bleepy.utils.Constants.KEY_CODE_CREATED;
+import static bleepy.pack.com.bleepy.utils.Constants.KEY_CODE_ID;
+import static bleepy.pack.com.bleepy.utils.Constants.KEY_DESCRIPTION;
+import static bleepy.pack.com.bleepy.utils.Constants.KEY_LOCATION;
+import static bleepy.pack.com.bleepy.utils.Constants.KEY_NOTI_TYPE;
+import static bleepy.pack.com.bleepy.utils.Constants.KEY_RESPONDERS;
 import static bleepy.pack.com.bleepy.utils.Constants.KEY_USERID;
+import static bleepy.pack.com.bleepy.utils.Constants.KEY_VOICE_DATA;
+import static bleepy.pack.com.bleepy.utils.customdialog.AppDialogManager.showWaitingAcceptanceDialog;
+
 
 public class DashboardActivity extends BaseActivity
-        implements DuoMenuView.OnMenuClickListener,DashboardContract.DashboardView {
+        implements DuoMenuView.OnMenuClickListener,DashboardContract.DashboardView,DialogListener.DashBoardListener {
     @Inject
     DashboardContract.Presenter mPresenter;
     DashboardComponent mDashboardComponent;
@@ -73,18 +85,52 @@ public class DashboardActivity extends BaseActivity
     @BindView(R.id.tvSignOut)TextView tvSignOut;
     @BindView(R.id.ivArcMenu)ImageView ivArcMenu;
     Menu mMenu;
-    int userID;
+    //int userID;
     Intent mIntent;
     DashboardInfoResponse dashboardInfo;
     DuoDrawerToggle duoDrawerToggle;
     @BindView(R.id.containerShadow)FrameLayout containerShadow;
+    Bundle mFcmBundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
+        if(getIntent()!=null&&getIntent().getExtras()!=null){
+                //showWaitingAcceptanceDialog1(DashboardActivity.this,DashboardActivity.this);
+                Bundle bundle=getIntent().getBundleExtra(FCM_BUNDLE);
+                if(bundle!=null) {
+                    EmergencyCode emergencyCode = new EmergencyCode();
+                    emergencyCode.setCodeID(bundle.getString(KEY_CODE_ID));
+                    emergencyCode.setCodeCreatedDate(bundle.getString(KEY_CODE_CREATED));
+                    emergencyCode.setDescription(bundle.getString(KEY_DESCRIPTION));
+                    emergencyCode.setVoiceData(bundle.getString(KEY_VOICE_DATA));
+                    emergencyCode.setLocation(bundle.getString(KEY_LOCATION));
+                    emergencyCode.setLocation(bundle.getString(KEY_RESPONDERS));
+                    openWaitingAccptanceDialog(emergencyCode);
+                }
+
+        }
         init();
     }
+    /*@Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        if(getIntent().getExtras()!=null){
+            if(getIntent().getExtras().getBoolean(KEY_NOTI_TYPE)){
+                //showWaitingAcceptanceDialog1(DashboardActivity.this,DashboardActivity.this);
+                Bundle bundle=intent.getExtras();
+                EmergencyCode emergencyCode=new EmergencyCode();
+                emergencyCode.setCodeID(bundle.getString(KEY_CODE_ID));
+                emergencyCode.setCodeCreatedDate(bundle.getString(KEY_CODE_CREATED));
+                emergencyCode.setDescription(bundle.getString(KEY_DESCRIPTION));
+                emergencyCode.setVoiceData(bundle.getString(KEY_VOICE_DATA));
+                emergencyCode.setLocation(bundle.getString(KEY_LOCATION));
+                emergencyCode.setLocation(bundle.getString(KEY_RESPONDERS));
+                openWaitingAccptanceDialog(emergencyCode);
+            }
+        }
+    }*/
     @SuppressLint("SetTextI18n")
     private void init(){
         initComponent();
@@ -99,13 +145,9 @@ public class DashboardActivity extends BaseActivity
         handleDrawer();
         mMenuAdapter.setViewSelected(0, true);
         setTitle(mTitles.get(0));
-        if(getIntent().getExtras()!=null){
-            userID=getIntent().getExtras().getInt(KEY_USERID);
-            mPresenter.getUserDashboardInfo();
-        }
-
-
+        mPresenter.getUserDashboardInfo();
     }
+
     private void initComponent() {
         this.mDashboardComponent = DaggerDashboardComponent.builder()
                 .applicationComponent(getApplicationComponent())
@@ -289,12 +331,6 @@ public class DashboardActivity extends BaseActivity
         toolbar_title.setTextColor(ContextCompat.getColor(DashboardActivity.this,R.color.white));
         duoDrawerToggle.setHomeAsUpIndicator(R.drawable.menu_icon_white);
     }
-
-    @Override
-    public int getUserID() {
-        return userID;
-    }
-
     @Override
     public void setDashboardInfo(DashboardInfoResponse dashboardInfo) {
         this.dashboardInfo=dashboardInfo;
@@ -336,6 +372,9 @@ public class DashboardActivity extends BaseActivity
         startNewActivity(intent);
         finish();
     }
+
+
+
 
     private class ViewHolder {
         private DuoDrawerLayout mDuoDrawerLayout;

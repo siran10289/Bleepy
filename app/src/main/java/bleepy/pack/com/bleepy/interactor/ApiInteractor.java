@@ -3,8 +3,14 @@ package bleepy.pack.com.bleepy.interactor;
 
 import android.app.Activity;
 
+import bleepy.pack.com.bleepy.models.callforhelp.CodeConfirmationRequest;
+import bleepy.pack.com.bleepy.models.callforhelp.CodeConfirmationResponse;
 import bleepy.pack.com.bleepy.models.callforhelp.CodeCreationRequest;
 import bleepy.pack.com.bleepy.models.callforhelp.CodeCreationResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.CodeInfoRequest;
+import bleepy.pack.com.bleepy.models.callforhelp.CodeInformationResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.EmergencyAlertAcceptRequest;
+import bleepy.pack.com.bleepy.models.callforhelp.EmergencyAlertResponse;
 import bleepy.pack.com.bleepy.models.callforhelp.LocationsResponse;
 import bleepy.pack.com.bleepy.models.callforhelp.PushVoiceRequest;
 import bleepy.pack.com.bleepy.models.callforhelp.TeamsResponse;
@@ -60,6 +66,9 @@ public interface ApiInteractor {
     void getTeams(Activity activity, BaseView mView, CommonRequest commonRequest, LoadListener<TeamsResponse> listener, boolean state);
     void pushVoiceData(Activity activity, BaseView mView, PushVoiceRequest pushVoiceRequest, LoadListener<VoiceUpdateResponse> listener, boolean state);
     void generateCode(Activity activity, BaseView mView, CodeCreationRequest codeCreationRequest, LoadListener<CodeCreationResponse> listener, boolean state);
+    void acceptRejectEmergency(Activity activity, BaseView mView, EmergencyAlertAcceptRequest emergencyAlertAcceptRequest, LoadListener<EmergencyAlertResponse> listener, boolean state);
+    void getCodeInformation(Activity activity, BaseView mView, CodeInfoRequest emergencyAlertAcceptRequest, LoadListener<CodeInformationResponse> listener, boolean state);
+    void getCodeConformation(Activity activity, BaseView mView, CodeConfirmationRequest emergencyAlertAcceptRequest, LoadListener<CodeConfirmationResponse> listener, boolean state);
 
 }
 

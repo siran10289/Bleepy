@@ -35,6 +35,7 @@ public class BleepyApplication extends MultiDexApplication {
   public void onCreate() {
     super.onCreate();
     refreshedFCMToken = FirebaseInstanceId.getInstance().getToken();
+
     this.initializeInjector();
     Dexter.initialize(this);
   }

@@ -7,9 +7,12 @@ import javax.inject.Singleton;
 
 import bleepy.pack.com.bleepy.apiservice.Api;
 import bleepy.pack.com.bleepy.di.scope.GsonRestAdapter;
+import bleepy.pack.com.bleepy.di.scope.PerActivity;
 import bleepy.pack.com.bleepy.interactor.ApiInteractor;
 import bleepy.pack.com.bleepy.interactor.ApiInteractorImpl;
 import bleepy.pack.com.bleepy.utils.preferences.PrefsManager;
+import bleepy.pack.com.bleepy.view.base.BaseContract;
+import bleepy.pack.com.bleepy.view.base.BasePresenterImpl;
 import bleepy.pack.com.bleepy.view.signup.PackageInfoInteractor;
 import bleepy.pack.com.bleepy.view.signup.PackageInfoInteractorImpl;
 import dagger.Module;
@@ -30,5 +33,7 @@ public class PresentationModule {
     public PackageInfoInteractor mPackageInfoInteractor(Context context, PrefsManager prefsManager) {
         return new PackageInfoInteractorImpl(context, prefsManager);
     }
+
+
 
 }

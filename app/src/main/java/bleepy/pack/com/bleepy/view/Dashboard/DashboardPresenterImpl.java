@@ -15,6 +15,8 @@ import bleepy.pack.com.bleepy.R;
 import bleepy.pack.com.bleepy.interactor.ApiInteractor;
 import bleepy.pack.com.bleepy.models.callforhelp.CodeCreationRequest;
 import bleepy.pack.com.bleepy.models.callforhelp.CodeCreationResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.EmergencyAlertAcceptRequest;
+import bleepy.pack.com.bleepy.models.callforhelp.EmergencyAlertResponse;
 import bleepy.pack.com.bleepy.models.callforhelp.LocationsResponse;
 import bleepy.pack.com.bleepy.models.callforhelp.PushVoiceRequest;
 import bleepy.pack.com.bleepy.models.callforhelp.TeamsResponse;
@@ -55,6 +57,7 @@ public class DashboardPresenterImpl implements DashboardContract.Presenter {
     private DashboardContract.ProfileView mProfileView;
     private DashboardContract.SettingsView mSettingsView;
     private DashboardContract.CallForHelpView mCallForHelpView;
+    private DashboardContract.EmergencyAlertView mEmergencyAlertView;
     private Activity mActivity;
 
     public DashboardPresenterImpl(Activity activity,Context context, ApiInteractor apiInteractor, PrefsManager prefsManager, PackageInfoInteractor mPackageInfoInteractor) {
@@ -99,6 +102,11 @@ public class DashboardPresenterImpl implements DashboardContract.Presenter {
     }
 
     @Override
+    public void setEmergencyAlertView(DashboardContract.EmergencyAlertView emergencyAlertView) {
+        this.mEmergencyAlertView=emergencyAlertView;
+    }
+
+    @Override
     public void pushVoiceData(String voiceBase64) {
         PushVoiceRequest pushVoiceRequest=new PushVoiceRequest();
         pushVoiceRequest.setVoiceRecord(voiceBase64);
@@ -108,7 +116,7 @@ public class DashboardPresenterImpl implements DashboardContract.Presenter {
     @Override
     public void getUserDashboardInfo() {
         DashboardInfoRequest dashboardInfoRequest = new DashboardInfoRequest();
-        dashboardInfoRequest.setUserid(String.valueOf(mDashboardView.getUserID()));
+        dashboardInfoRequest.setUserid(String.valueOf(mPrefsManager.getIntKeyValueFromPrefsByKey(KEY_USERID)));
         if(DEBUG_MODE)Log.e("Req:",new Gson().toJson(dashboardInfoRequest).toString());
         mApiInteractor.getDashboardInfo(mDashboardView, dashboardInfoRequest, mDashboardInfoResponseLoadListener, true);
 
@@ -139,7 +147,7 @@ public class DashboardPresenterImpl implements DashboardContract.Presenter {
     @Override
     public void getProfileInfo() {
         CommonRequest commonRequest=new CommonRequest();
-        commonRequest.setUserid(mProfileView.getUserID());
+        commonRequest.setUserid(mPrefsManager.getIntKeyValueFromPrefsByKey(KEY_USERID));
         mApiInteractor.getPrfoileInfo(mActivity,mProfileView,commonRequest,mUserProfileResponseLoadListener,true);
 
     }
@@ -205,6 +213,22 @@ public class DashboardPresenterImpl implements DashboardContract.Presenter {
 
         }
     }
+
+    @Override
+    public void emergencyAccept() {
+        EmergencyAlertAcceptRequest emergencyAlertAcceptRequest=new EmergencyAlertAcceptRequest();
+        emergencyAlertAcceptRequest.setCodeId(mEmergencyAlertView.getCodeID());
+        emergencyAlertAcceptRequest.setUserId(String.valueOf(mPrefsManager.getIntKeyValueFromPrefsByKey(KEY_USERID)));
+        emergencyAlertAcceptRequest.setCodeRespondTime(getTime());
+        emergencyAlertAcceptRequest.setUserStatus(mEmergencyAlertView.getUserStatus());
+        mApiInteractor.acceptRejectEmergency(mActivity,mEmergencyAlertView,emergencyAlertAcceptRequest,mEmergencyAlertResponseLoadListener,false);
+    }
+
+    @Override
+    public void emergencyReject(String reason) {
+
+    }
+
     private String getDate(){
         Date cDate = Calendar.getInstance().getTime();
         return new SimpleDateFormat("yyyy-MM-dd").format(cDate);
@@ -554,6 +578,34 @@ public class DashboardPresenterImpl implements DashboardContract.Presenter {
                         break;
                     case STATUS_FAILURE:
                         mCallForHelpView.showErrorDialog(responseBody.getMeta().getMessage());
+                        break;
+                }
+
+            }
+
+        }
+
+        @Override
+        public void onFailure(Throwable t) {
+
+        }
+
+        @Override
+        public void onError(Object error) {
+
+        }
+    };
+    LoadListener<EmergencyAlertResponse> mEmergencyAlertResponseLoadListener = new LoadListener<EmergencyAlertResponse>() {
+        @Override
+        public void onSuccess(EmergencyAlertResponse responseBody) {
+
+            if (responseBody != null) {
+                switch (responseBody.getMeta().getStatusType()) {
+                    case STATUS_SUCCESS:
+                        mEmergencyAlertView.setEmergencyAlertResponse(responseBody);
+                        break;
+                    case STATUS_FAILURE:
+                        mEmergencyAlertView.showErrorDialog(responseBody.getMeta().getMessage());
                         break;
                 }
 

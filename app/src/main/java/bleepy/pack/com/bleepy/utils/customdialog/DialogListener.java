@@ -4,6 +4,7 @@ package bleepy.pack.com.bleepy.utils.customdialog;
 import java.util.List;
 
 import bleepy.pack.com.bleepy.models.callforhelp.TeamsResponse;
+import bleepy.pack.com.bleepy.models.common.EmergencyCode;
 import bleepy.pack.com.bleepy.models.signin.SigninResponse;
 
 /**
@@ -22,6 +23,15 @@ public interface DialogListener {
     public interface SelectDeviceLisenter{
         void personalDeviceSelected();
         void shardDeviceSelected();
+    }
+    public interface BaseListener{
+        void onAcceptClicked(EmergencyCode emergencyCode);
+        void onRejectClicked();
+        void confirmClicked();
+        void CancelClicked();
+    }
+    public interface DashBoardListener{
+
     }
     public interface CallForHelpListener{
         void onTeamsSelected(List<TeamsResponse.Datum> selectedTeams);

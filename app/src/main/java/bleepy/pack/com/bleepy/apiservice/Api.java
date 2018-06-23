@@ -3,8 +3,14 @@ package bleepy.pack.com.bleepy.apiservice;
 
 
 
+import bleepy.pack.com.bleepy.models.callforhelp.CodeConfirmationRequest;
+import bleepy.pack.com.bleepy.models.callforhelp.CodeConfirmationResponse;
 import bleepy.pack.com.bleepy.models.callforhelp.CodeCreationRequest;
 import bleepy.pack.com.bleepy.models.callforhelp.CodeCreationResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.CodeInfoRequest;
+import bleepy.pack.com.bleepy.models.callforhelp.CodeInformationResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.EmergencyAlertAcceptRequest;
+import bleepy.pack.com.bleepy.models.callforhelp.EmergencyAlertResponse;
 import bleepy.pack.com.bleepy.models.callforhelp.LocationsResponse;
 import bleepy.pack.com.bleepy.models.callforhelp.PushVoiceRequest;
 import bleepy.pack.com.bleepy.models.callforhelp.TeamsResponse;
@@ -81,6 +87,12 @@ public interface Api {
     Call<VoiceUpdateResponse> pushVoiceData(@Body PushVoiceRequest pushVoiceRequest);
     @POST("generatecode")
     Call<CodeCreationResponse> createCode(@Body CodeCreationRequest pushVoiceRequest);
+    @POST("checkcoderesponse")
+    Call<EmergencyAlertResponse> emergencyAlert(@Body EmergencyAlertAcceptRequest pushVoiceRequest);
+    @POST("codeinformation")
+    Call<CodeInformationResponse> getCodeInfo(@Body CodeInfoRequest pushVoiceRequest);
+    @POST("codeconfirmation")
+    Call<CodeConfirmationResponse> getCodeConformation(@Body CodeConfirmationRequest pushVoiceRequest);
 
 
     /*@PUT("update-email")

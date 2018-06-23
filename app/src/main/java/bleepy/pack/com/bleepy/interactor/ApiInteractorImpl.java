@@ -3,8 +3,14 @@ import android.app.Activity;
 import android.speech.tts.Voice;
 
 import bleepy.pack.com.bleepy.apiservice.Api;
+import bleepy.pack.com.bleepy.models.callforhelp.CodeConfirmationRequest;
+import bleepy.pack.com.bleepy.models.callforhelp.CodeConfirmationResponse;
 import bleepy.pack.com.bleepy.models.callforhelp.CodeCreationRequest;
 import bleepy.pack.com.bleepy.models.callforhelp.CodeCreationResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.CodeInfoRequest;
+import bleepy.pack.com.bleepy.models.callforhelp.CodeInformationResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.EmergencyAlertAcceptRequest;
+import bleepy.pack.com.bleepy.models.callforhelp.EmergencyAlertResponse;
 import bleepy.pack.com.bleepy.models.callforhelp.LocationsResponse;
 import bleepy.pack.com.bleepy.models.callforhelp.PushVoiceRequest;
 import bleepy.pack.com.bleepy.models.callforhelp.TeamsResponse;
@@ -180,6 +186,27 @@ public class ApiInteractorImpl implements ApiInteractor {
     public void generateCode(Activity activity, BaseView mView, CodeCreationRequest codeCreationRequest, LoadListener<CodeCreationResponse> listener, boolean state) {
         UiCallback<CodeCreationResponse> callback = new UiCallback(activity,mView, listener,state);
         Call<CodeCreationResponse> call = mApi.createCode(codeCreationRequest);
+        callback.start(call);
+    }
+
+    @Override
+    public void acceptRejectEmergency(Activity activity, BaseView mView, EmergencyAlertAcceptRequest emergencyAlertAcceptRequest, LoadListener<EmergencyAlertResponse> listener, boolean state) {
+        UiCallback<EmergencyAlertResponse> callback = new UiCallback(activity,mView, listener,state);
+        Call<EmergencyAlertResponse> call = mApi.emergencyAlert(emergencyAlertAcceptRequest);
+        callback.start(call);
+    }
+
+    @Override
+    public void getCodeInformation(Activity activity, BaseView mView, CodeInfoRequest codeInfoRequest, LoadListener<CodeInformationResponse> listener, boolean state) {
+        UiCallback<CodeInformationResponse> callback = new UiCallback(activity,mView, listener,state);
+        Call<CodeInformationResponse> call = mApi.getCodeInfo(codeInfoRequest);
+        callback.start(call);
+    }
+
+    @Override
+    public void getCodeConformation(Activity activity, BaseView mView, CodeConfirmationRequest emergencyAlertAcceptRequest, LoadListener<CodeConfirmationResponse> listener, boolean state) {
+        UiCallback<CodeConfirmationResponse> callback = new UiCallback(activity,mView, listener,state);
+        Call<CodeConfirmationResponse> call = mApi.getCodeConformation(emergencyAlertAcceptRequest);
         callback.start(call);
     }
 

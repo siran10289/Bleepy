@@ -31,7 +31,7 @@
     <string name="gallery">Gallery</string>
     <string name="camera">Camera</string>
     <string name="remove_photo">Remove photo</string>
-    <string name="cancal">Cancal</string>
+    <string name="cancal">Cancel</string>
     <string name="done">Done</string>
     <string name="rotate">Rotate</string>
     <string name="singup">Signup</string>
@@ -123,6 +123,13 @@
     <string name="please_enter_description">Please enter your description</string>
     <string name="choose_your_location">Please choose your location</string>
     <string name="select_teams">Please select the teams</string>
+    <string name="waiting_acceptance">Waiting Acceptance</string>
+    <string name="reject">Reject</string>
+    <string name="rejection_reason">Rejection reason</string>
+    <string name="code_attended">Code attended</string>
+    <string name="confirmation">Confirmation</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
 
 
 </resources>

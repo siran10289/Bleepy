@@ -11,6 +11,7 @@ import bleepy.pack.com.bleepy.view.Dashboard.DashboardContract;
 import bleepy.pack.com.bleepy.view.Dashboard.EditProfileFragment;
 import bleepy.pack.com.bleepy.view.Dashboard.MyScheduleActivity;
 import bleepy.pack.com.bleepy.view.Dashboard.SettingsFragment;
+import bleepy.pack.com.bleepy.view.base.BaseActivity;
 import bleepy.pack.com.bleepy.view.callforhelp.CallForHelpActivity;
 import bleepy.pack.com.bleepy.view.signin.ForgetCredentialsActivity;
 import bleepy.pack.com.bleepy.view.signin.SigninActivity;
@@ -32,5 +33,6 @@ public interface DashboardComponent {
     void inject(CallForHelpActivity callForHelpActivity);
     void inject(EditProfileFragment editProfileFragment);
     void inject(SettingsFragment settingsFragment);
+    void inject(BaseActivity baseActivity);
     DashboardContract.Presenter dashBoardPresenter();
 }

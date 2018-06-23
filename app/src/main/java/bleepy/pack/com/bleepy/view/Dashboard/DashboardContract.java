@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.widget.EditText;
 
 import bleepy.pack.com.bleepy.models.callforhelp.CodeCreationResponse;
+import bleepy.pack.com.bleepy.models.callforhelp.EmergencyAlertResponse;
 import bleepy.pack.com.bleepy.models.callforhelp.LocationsResponse;
 import bleepy.pack.com.bleepy.models.callforhelp.TeamsResponse;
 import bleepy.pack.com.bleepy.models.callforhelp.VoiceUpdateResponse;
@@ -24,7 +25,7 @@ public interface DashboardContract {
 
 
     interface DashboardView extends BaseView {
-       int getUserID();
+
        void setDashboardInfo(DashboardInfoResponse dashboardInfo);
        void navigateToHome();
     }
@@ -37,7 +38,6 @@ public interface DashboardContract {
         void setTeamMembers(GroupMembersResponse groupMembersResponse);
     }
     interface ProfileView extends BaseView{
-        int getUserID();
         void setProfileInfo(UserProfileResponse userProfileResponse);
         String mobileNumber();
     }
@@ -55,7 +55,11 @@ public interface DashboardContract {
         String getVoiceDataUrl();
         String getLocationID();
         String getTeamID();
-
+    }
+    interface EmergencyAlertView extends BaseView{
+        String getCodeID();
+        String getUserStatus();
+        void setEmergencyAlertResponse(EmergencyAlertResponse emergencyAlertResponse);
 
     }
     interface Presenter extends BasePresenter {
@@ -66,6 +70,7 @@ public interface DashboardContract {
         void setProfileView(ProfileView profileView);
         void setSettingsView(SettingsView settingsView);
         void setCallForHelpView(CallForHelpView callForHelpView);
+        void setEmergencyAlertView(EmergencyAlertView emergencyAlertView);
         void pushVoiceData(String voiceBase64);
         void getUserDashboardInfo();
         void signOutClicked();
@@ -77,6 +82,8 @@ public interface DashboardContract {
         void getLocations();
         void getTeams();
         void generateCode();
+        void emergencyAccept();
+        void emergencyReject(String reason);
 
 
 

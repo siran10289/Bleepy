@@ -48,6 +48,17 @@ public class Constants {
     public final static String KEY_DEVICE_TYPE="DEVICE_TYPE";
     public final static String KEY_MY_OBJ="KEY_MY_OBJ";
     public final static String KEY_USERID="KEY_USERID";
+    public static final String ACTION_INTENT_FCM_RECIEVED = "bleepy.pack.com.bleepy.FCM_RECIEVED";
+    public static final String KEY_NOTI_TYPE="KEY_NOTI_TYPE";
+    public static final String KEY_DESCRIPTION="description";
+    public static final String KEY_CODE_CREATED="codecreated";
+    public static final String KEY_CODE_ID="codeid";
+    public static final String KEY_VOICE_DATA="voicedata";
+    public static final String KEY_RESPONDERS="responders";
+    public static final String KEY_LOCATION="location";
+    public static final Integer DELAY_MILLISECONDS=10000;
+    public static final String FCM_BUNDLE="FCM_BUNDLE";
+
 
 
 

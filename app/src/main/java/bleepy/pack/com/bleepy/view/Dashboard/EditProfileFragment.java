@@ -135,11 +135,7 @@ public class EditProfileFragment extends BaseFragment implements DashboardContra
         mPresenter.updateProfileInfo();
     }
 
-    @Override
-    public int getUserID() {
-        return  ((DashboardActivity)getActivity()).getUserID();
 
-    }
 
     @Override
     public void setProfileInfo(UserProfileResponse userProfileResponse) {
