@@ -18,6 +18,8 @@ import bleepy.pack.com.bleepy.models.callforhelp.VoiceUpdateResponse;
 import bleepy.pack.com.bleepy.models.common.CommonRequest;
 import bleepy.pack.com.bleepy.models.common.CommonResponse;
 import bleepy.pack.com.bleepy.models.common.ImageUploadResponse;
+import bleepy.pack.com.bleepy.models.common.UpdateFCMTokenInfoRequest;
+import bleepy.pack.com.bleepy.models.common.UpdateFCMTokenResponse;
 import bleepy.pack.com.bleepy.models.common.UserImageUploadRequest;
 import bleepy.pack.com.bleepy.models.common.WelcomeScreenRequest;
 import bleepy.pack.com.bleepy.models.common.WelcomeScreenResponse;
@@ -26,6 +28,10 @@ import bleepy.pack.com.bleepy.models.dashboard.DashboardInfoRequest;
 import bleepy.pack.com.bleepy.models.dashboard.DashboardInfoResponse;
 import bleepy.pack.com.bleepy.models.dashboard.UpdateProfileRequest;
 import bleepy.pack.com.bleepy.models.dashboard.UserProfileResponse;
+import bleepy.pack.com.bleepy.models.emegencycalllog.CodeLogMembersResponse;
+import bleepy.pack.com.bleepy.models.emegencycalllog.DeleteCodeRequest;
+import bleepy.pack.com.bleepy.models.emegencycalllog.EmergencyCalllogRequest;
+import bleepy.pack.com.bleepy.models.emegencycalllog.EmergencyCalllogResponse;
 import bleepy.pack.com.bleepy.models.myschedule.MyScheduleListResponse;
 import bleepy.pack.com.bleepy.models.signin.ForgetCredentialsRequest;
 import bleepy.pack.com.bleepy.models.signin.SigninRequest;
@@ -61,6 +67,13 @@ public class ApiInteractorImpl implements ApiInteractor {
     public void validateUser(BaseView mView, SigninRequest request, LoadListener<SigninResponse> mLoginListener, boolean state) {
         UiCallback<SigninResponse> callback = new UiCallback(mView, mLoginListener,state);
         Call<SigninResponse> call = mApi.validateUser(request);
+        callback.start(call);
+    }
+
+    @Override
+    public void logout(BaseView mView, CommonRequest request, LoadListener<CommonResponse> mLoginListener, boolean state) {
+        UiCallback<CommonResponse> callback = new UiCallback(mView, mLoginListener,state);
+        Call<CommonResponse> call = mApi.logout(request);
         callback.start(call);
     }
 
@@ -207,6 +220,39 @@ public class ApiInteractorImpl implements ApiInteractor {
     public void getCodeConformation(Activity activity, BaseView mView, CodeConfirmationRequest emergencyAlertAcceptRequest, LoadListener<CodeConfirmationResponse> listener, boolean state) {
         UiCallback<CodeConfirmationResponse> callback = new UiCallback(activity,mView, listener,state);
         Call<CodeConfirmationResponse> call = mApi.getCodeConformation(emergencyAlertAcceptRequest);
+        callback.start(call);
+    }
+
+    @Override
+    public void updateFCMInfo(Activity activity, BaseView mView, UpdateFCMTokenInfoRequest updateFCMTokenInfoRequest, LoadListener<UpdateFCMTokenResponse> listener, boolean state) {
+        UiCallback<UpdateFCMTokenResponse> callback = new UiCallback(activity,mView, listener,state);
+        Call<UpdateFCMTokenResponse> call = mApi.updateFCMInfo(updateFCMTokenInfoRequest);
+        callback.start(call);
+    }
+
+    @Override
+    public void getEmergencyCodeLogs(Activity activity, BaseView mView, EmergencyCalllogRequest emergencyCalllogRequest,boolean isFromSearch ,LoadListener<EmergencyCalllogResponse> listener, boolean state) {
+        Call<EmergencyCalllogResponse> call;
+        UiCallback<EmergencyCalllogResponse> callback = new UiCallback(activity,mView, listener,state);
+        if(isFromSearch) {
+            call = mApi.searchEmergencyCallLogs(emergencyCalllogRequest);
+        }else{
+            call = mApi.getEmergencyCallLogs(emergencyCalllogRequest);
+        }
+        callback.start(call);
+    }
+
+    @Override
+    public void onDeleteCode(Activity activity, BaseView mView, DeleteCodeRequest deleteCodeRequest, LoadListener<CommonResponse> listener, boolean state) {
+        UiCallback<CommonResponse> callback = new UiCallback(activity,mView, listener,state);
+        Call<CommonResponse> call = mApi.onCodeDelete(deleteCodeRequest);
+        callback.start(call);
+    }
+
+    @Override
+    public void onCodeInfoClicked(Activity activity, BaseView mView, DeleteCodeRequest deleteCodeRequest, LoadListener<CodeLogMembersResponse> listener, boolean state) {
+        UiCallback<CodeLogMembersResponse> callback = new UiCallback(activity,mView, listener,state);
+        Call<CodeLogMembersResponse> call = mApi.getCodeLogInfo(deleteCodeRequest);
         callback.start(call);
     }
 

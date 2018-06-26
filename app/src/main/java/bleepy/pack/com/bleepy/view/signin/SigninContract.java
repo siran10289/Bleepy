@@ -19,7 +19,7 @@ public interface SigninContract {
         void openDeviceRegistrationDialog(SigninResponse response);
         void navigateToDeviceRegistration();
         void navigateToKeyRegistration();
-        void navigateToDashBoard(String userID);
+        void navigateToDashBoard(String message,String userID);
 
     }
     interface ForgotPasswordView extends BaseView{

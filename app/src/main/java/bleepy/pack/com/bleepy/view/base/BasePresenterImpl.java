@@ -57,6 +57,7 @@ public class BasePresenterImpl implements BaseContract.Presenter {
     private Activity mActivity;
     private PackageInfoInteractor mPackageInfoInteractor;
     private BaseContract.EmergencyAlertView mEmergencyAlertView;
+    private BaseView mBaseView;
 
 
     public BasePresenterImpl( Activity context, ApiInteractor apiInteractor, PrefsManager prefsManager, PackageInfoInteractor mPackageInfoInteractor) {
@@ -79,12 +80,22 @@ public class BasePresenterImpl implements BaseContract.Presenter {
         emergencyAlertAcceptRequest.setUserId(String.valueOf(mPrefsManager.getIntKeyValueFromPrefsByKey(KEY_USERID)));
         emergencyAlertAcceptRequest.setCodeRespondTime(getTime());
         emergencyAlertAcceptRequest.setUserStatus(mEmergencyAlertView.getUserStatus());
-        mApiInteractor.acceptRejectEmergency(mActivity,mEmergencyAlertView,emergencyAlertAcceptRequest,mEmergencyAlertResponseLoadListener,false);
+        mApiInteractor.acceptRejectEmergency(mActivity,mBaseView,emergencyAlertAcceptRequest,mEmergencyAlertResponseLoadListener,false);
+
     }
 
     @Override
     public void emergencyReject(String reason) {
-
+        if(reason.isEmpty()){
+            mEmergencyAlertView.showErrorDialog(mActivity.getString(R.string.error_rejection_reason));
+        }else {
+            EmergencyAlertAcceptRequest emergencyAlertAcceptRequest = new EmergencyAlertAcceptRequest();
+            emergencyAlertAcceptRequest.setCodeId(mEmergencyAlertView.getCodeID());
+            emergencyAlertAcceptRequest.setUserId(String.valueOf(mPrefsManager.getIntKeyValueFromPrefsByKey(KEY_USERID)));
+            emergencyAlertAcceptRequest.setCodeRespondTime(getTime());
+            emergencyAlertAcceptRequest.setUserStatus(mEmergencyAlertView.getUserStatus());
+            mApiInteractor.acceptRejectEmergency(mActivity, mEmergencyAlertView, emergencyAlertAcceptRequest, mEmergencyRejectResponseLoadListener, false);
+        }
     }
 
     @Override
@@ -94,14 +105,14 @@ public class BasePresenterImpl implements BaseContract.Presenter {
         codeConfirmationRequest.setCodeStatus(status);
         codeConfirmationRequest.setTimeToAttend(getTime());
         codeConfirmationRequest.setUserId(String.valueOf(mPrefsManager.getIntKeyValueFromPrefsByKey(KEY_USERID)));
-        mApiInteractor.getCodeConformation(mActivity,mEmergencyAlertView,codeConfirmationRequest,mCodeConfirmationResponseLoadListener,true);
+        mApiInteractor.getCodeConformation(mActivity,mBaseView,codeConfirmationRequest,mCodeConfirmationResponseLoadListener,true);
     }
 
     @Override
     public void getCodeInformation(String codeID) {
         CodeInfoRequest codeInfoRequest=new CodeInfoRequest();
         codeInfoRequest.setCodeId(codeID);
-        mApiInteractor.getCodeInformation(mActivity,mEmergencyAlertView,codeInfoRequest,mCodeInformationResponseLoadListener,true);
+        mApiInteractor.getCodeInformation(mActivity,mBaseView,codeInfoRequest,mCodeInformationResponseLoadListener,false);
     }
 
     private String getDate(){
@@ -116,7 +127,7 @@ public class BasePresenterImpl implements BaseContract.Presenter {
 
     @Override
     public void setView(BaseView view) {
-
+        this.mBaseView=view;
     }
 
     @Override
@@ -133,6 +144,34 @@ public class BasePresenterImpl implements BaseContract.Presenter {
                 switch (responseBody.getMeta().getStatusType()) {
                     case STATUS_SUCCESS:
                         mEmergencyAlertView.setEmergencyAlertResponse(responseBody);
+                        break;
+                    case STATUS_FAILURE:
+                        mEmergencyAlertView.showErrorDialog(responseBody.getMeta().getMessage());
+                        break;
+                }
+
+            }
+
+        }
+
+        @Override
+        public void onFailure(Throwable t) {
+
+        }
+
+        @Override
+        public void onError(Object error) {
+
+        }
+    };
+    LoadListener<EmergencyAlertResponse> mEmergencyRejectResponseLoadListener = new LoadListener<EmergencyAlertResponse>() {
+        @Override
+        public void onSuccess(EmergencyAlertResponse responseBody) {
+
+            if (responseBody != null) {
+                switch (responseBody.getMeta().getStatusType()) {
+                    case STATUS_SUCCESS:
+                        mEmergencyAlertView.showErrorDialog(responseBody.getMeta().getMessage());
                         break;
                     case STATUS_FAILURE:
                         mEmergencyAlertView.showErrorDialog(responseBody.getMeta().getMessage());

@@ -18,6 +18,8 @@ import bleepy.pack.com.bleepy.models.callforhelp.VoiceUpdateResponse;
 import bleepy.pack.com.bleepy.models.common.CommonRequest;
 import bleepy.pack.com.bleepy.models.common.CommonResponse;
 import bleepy.pack.com.bleepy.models.common.ImageUploadResponse;
+import bleepy.pack.com.bleepy.models.common.UpdateFCMTokenInfoRequest;
+import bleepy.pack.com.bleepy.models.common.UpdateFCMTokenResponse;
 import bleepy.pack.com.bleepy.models.common.UserImageUploadRequest;
 import bleepy.pack.com.bleepy.models.common.WelcomeScreenRequest;
 import bleepy.pack.com.bleepy.models.common.WelcomeScreenResponse;
@@ -26,6 +28,10 @@ import bleepy.pack.com.bleepy.models.dashboard.DashboardInfoRequest;
 import bleepy.pack.com.bleepy.models.dashboard.DashboardInfoResponse;
 import bleepy.pack.com.bleepy.models.dashboard.UpdateProfileRequest;
 import bleepy.pack.com.bleepy.models.dashboard.UserProfileResponse;
+import bleepy.pack.com.bleepy.models.emegencycalllog.CodeLogMembersResponse;
+import bleepy.pack.com.bleepy.models.emegencycalllog.DeleteCodeRequest;
+import bleepy.pack.com.bleepy.models.emegencycalllog.EmergencyCalllogRequest;
+import bleepy.pack.com.bleepy.models.emegencycalllog.EmergencyCalllogResponse;
 import bleepy.pack.com.bleepy.models.myschedule.MyScheduleListResponse;
 import bleepy.pack.com.bleepy.models.signin.ForgetCredentialsRequest;
 import bleepy.pack.com.bleepy.models.signin.SigninRequest;
@@ -50,6 +56,7 @@ public interface ApiInteractor {
 
 
     void validateUser(BaseView mView, SigninRequest request, LoadListener<SigninResponse> mLoginListener, boolean state);
+    void logout(BaseView mView, CommonRequest request, LoadListener<CommonResponse> mLoginListener, boolean state);
     void registerUser(BaseView mView, RegisterUserRequest request, LoadListener<SignupResponse> mSignupListener, boolean state);
     void uploadProfilePicture(BaseView mView, UserImageUploadRequest userImageUploadRequest, LoadListener<ImageUploadResponse> mSignupListener, boolean state);
     void updateDeviceInfo(BaseView mView, UpdateDeviceInfoReq updateDeviceInfoReq, LoadListener<UpdateDeviceInfoResponse> mSignupListener, boolean state);
@@ -69,6 +76,11 @@ public interface ApiInteractor {
     void acceptRejectEmergency(Activity activity, BaseView mView, EmergencyAlertAcceptRequest emergencyAlertAcceptRequest, LoadListener<EmergencyAlertResponse> listener, boolean state);
     void getCodeInformation(Activity activity, BaseView mView, CodeInfoRequest emergencyAlertAcceptRequest, LoadListener<CodeInformationResponse> listener, boolean state);
     void getCodeConformation(Activity activity, BaseView mView, CodeConfirmationRequest emergencyAlertAcceptRequest, LoadListener<CodeConfirmationResponse> listener, boolean state);
+    void updateFCMInfo(Activity activity, BaseView mView, UpdateFCMTokenInfoRequest updateFCMTokenInfoRequest, LoadListener<UpdateFCMTokenResponse> listener, boolean state);
+    void getEmergencyCodeLogs(Activity activity, BaseView mView, EmergencyCalllogRequest emergencyCalllogRequest,boolean isFromSearch, LoadListener<EmergencyCalllogResponse> listener, boolean state);
+    void onDeleteCode(Activity activity, BaseView mView, DeleteCodeRequest deleteCodeRequest, LoadListener<CommonResponse> listener, boolean state);
+    void onCodeInfoClicked(Activity activity, BaseView mView, DeleteCodeRequest deleteCodeRequest, LoadListener<CodeLogMembersResponse> listener, boolean state);
+
 
 }
 

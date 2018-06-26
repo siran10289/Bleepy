@@ -9,7 +9,6 @@
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
 
-
     <application
         android:name=".BleepyApplication"
         android:allowBackup="true"
@@ -91,11 +90,22 @@
             android:name=".view.Dashboard.DashboardActivity"
             android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".view.Dashboard.MyScheduleActivity">
+        <activity
+            android:name=".view.Dashboard.MyScheduleActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".view.team.GroupMembersActivity">
+        <activity
+            android:name=".view.team.GroupMembersActivity"
+            android:screenOrientation="portrait">
         </activity>
-        <activity android:name=".view.callforhelp.CallForHelpActivity">
+        <activity
+            android:name=".view.callforhelp.CallForHelpActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".view.calllogs.EmergencyCallLogsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden">
         </activity>
     </application>
 

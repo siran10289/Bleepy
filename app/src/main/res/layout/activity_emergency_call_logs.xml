@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.calllogs.EmergencyCallLogsActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <include layout="@layout/toolbar"></include>
+
+    </android.support.design.widget.AppBarLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:showIn="@layout/activity_call_for_help">
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/fifty_dp"
+            android:background="@color/light_lavendor"
+            android:orientation="horizontal"
+            android:padding="@dimen/five_dp">
+
+            <RadioButton
+                android:id="@+id/rbReturedCode"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center"
+                android:text="@string/retured_codes"
+                android:textColor="@color/white"/>
+
+            <RadioButton
+                android:id="@+id/rbCodeRegistered"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/codes_register"
+                android:textColor="@color/light_lavendor_color"/>
+
+        </RadioGroup>
+
+        <EditText
+            android:id="@+id/etSearchCodes"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/forty_dp"
+            android:layout_margin="@dimen/ten_dp"
+            android:textSize="@dimen/twelve_sp"
+            android:layout_marginTop="@dimen/five_dp"
+            android:inputType="text"
+            android:imeOptions="actionSearch"
+            android:focusableInTouchMode="true"
+            android:singleLine="true"
+            android:background="@drawable/bg_grey_edittext"
+            android:drawableLeft="@drawable/ic_search"
+            android:drawablePadding="@dimen/ten_dp"
+            android:hint="@string/search_for_code"
+            android:paddingLeft="@dimen/ten_dp"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvEmergencyLogs"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingLeft="@dimen/five_dp"
+            android:paddingRight="@dimen/five_dp"
+            android:paddingBottom="@dimen/five_dp">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+
+
+</android.support.design.widget.CoordinatorLayout>

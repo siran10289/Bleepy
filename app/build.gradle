@@ -92,6 +92,7 @@ dependencies {
     implementation appDependencies.circleimageview
     implementation appDependencies.fcm
 
+    implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     annotationProcessor appDependencies.daggerCompiler
     annotationProcessor appDependencies.butterKnifeAnnotation
 

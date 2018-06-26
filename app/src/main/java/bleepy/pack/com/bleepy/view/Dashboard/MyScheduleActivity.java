@@ -129,4 +129,9 @@ public class MyScheduleActivity extends BaseActivity implements DashboardContrac
         }
 
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mBleepyApplication.setCurrentActivity(MyScheduleActivity.this);
+    }
 }

@@ -4,18 +4,19 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#2DBBB2"
-    android:padding="@dimen/ten_dp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="@dimen/ten_dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
         android:layout_marginTop="@dimen/ten_dp"
+        android:layout_weight="2"
         android:gravity="center"
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/tvTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/iv_2"
@@ -29,7 +30,6 @@
     </LinearLayout>
 
 
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,29 +38,30 @@
         android:gravity="center"
         android:orientation="vertical">
 
-       <EditText
-           android:id="@+id/etRejectionReason"
-           android:layout_width="match_parent"
-           android:gravity="top"
-           android:padding="@dimen/ten_dp"
-           android:textColor="@color/white"
-           android:layout_marginTop="@dimen/twenty_dp"
-           android:layout_height="@dimen/hundred_dp"
-           android:background="@drawable/roundrect_black_transpanracy"/>
+        <TextView
+            android:id="@+id/tvMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:gravity="top|center"
+            android:padding="@dimen/ten_dp"
+            android:text="ssssss"
+            android:textColor="@color/white"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/tv_dialog_description"
-            android:layout_marginTop="@dimen/twenty_dp"
             android:layout_marginBottom="@dimen/twenty_dp"
+            android:layout_marginTop="@dimen/twenty_dp"
             android:gravity="center"
             android:orientation="horizontal"
             android:weightSum="2">
 
             <Button
                 android:id="@+id/btnOK"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/thirty_five_dp"
                 android:layout_weight="1"
                 android:background="@drawable/bg_login_submit"
@@ -68,18 +69,6 @@
                 android:textColor="@color/white"
                 android:textStyle="bold"/>
 
-            <Button
-
-                android:id="@+id/btnCancel"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/thirty_five_dp"
-                android:layout_marginLeft="@dimen/five_dp"
-                android:layout_weight="1"
-                android:background="@drawable/bg_roundcorner_lavender"
-                android:text="@string/cancel"
-                android:textColor="@color/white"
-
-                android:textStyle="bold"/>
 
         </LinearLayout>
 

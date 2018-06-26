@@ -115,7 +115,7 @@
             android:layout_gravity="bottom|center_vertical"
             android:layout_marginBottom="@dimen/sixty_dp"
             app:menuChildAnim="true"
-            app:menuChildSize="@dimen/fifty_five_dp"
+            app:menuChildSize="@dimen/fifty_dp"
             app:menuClickAnim="true"
             android:visibility="visible"
             app:menuGravity="Bottom_Middle"

@@ -4,6 +4,7 @@ package bleepy.pack.com.bleepy.view.Dashboard;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -77,4 +78,6 @@ public class SettingsFragment extends BaseFragment implements DashboardContract.
     public String getConfirmPassword() {
         return etConfirmPassword.getText().toString().trim();
     }
+
+
 }

@@ -8,14 +8,18 @@ import bleepy.pack.com.bleepy.models.callforhelp.EmergencyAlertResponse;
 import bleepy.pack.com.bleepy.models.callforhelp.LocationsResponse;
 import bleepy.pack.com.bleepy.models.callforhelp.TeamsResponse;
 import bleepy.pack.com.bleepy.models.callforhelp.VoiceUpdateResponse;
+import bleepy.pack.com.bleepy.models.common.CommonResponse;
 import bleepy.pack.com.bleepy.models.common.WelcomeScreenResponse;
 import bleepy.pack.com.bleepy.models.dashboard.DashboardInfoResponse;
 import bleepy.pack.com.bleepy.models.dashboard.UserProfileResponse;
+import bleepy.pack.com.bleepy.models.emegencycalllog.CodeLogMembersResponse;
+import bleepy.pack.com.bleepy.models.emegencycalllog.EmergencyCalllogResponse;
 import bleepy.pack.com.bleepy.models.myschedule.MyScheduleListResponse;
 import bleepy.pack.com.bleepy.models.signup.UpdateRegKeyResponse;
 import bleepy.pack.com.bleepy.models.team.GroupMembersResponse;
 import bleepy.pack.com.bleepy.view.base.BasePresenter;
 import bleepy.pack.com.bleepy.view.base.BaseView;
+import bleepy.pack.com.bleepy.view.calllogs.EmergencyCallLogsActivity;
 
 
 /**
@@ -60,7 +64,13 @@ public interface DashboardContract {
         String getCodeID();
         String getUserStatus();
         void setEmergencyAlertResponse(EmergencyAlertResponse emergencyAlertResponse);
-
+    }
+    interface EmergencyCallLogView extends BaseView{
+        void setEmergencyLogs(EmergencyCalllogResponse response);
+        void setDeleteCodeResponse(CommonResponse commonResponse);
+        void setCodeLogMembersList(CodeLogMembersResponse codeLogMembersList);
+        void clearViews();
+        String getSearchableCodeID();
     }
     interface Presenter extends BasePresenter {
 
@@ -71,6 +81,7 @@ public interface DashboardContract {
         void setSettingsView(SettingsView settingsView);
         void setCallForHelpView(CallForHelpView callForHelpView);
         void setEmergencyAlertView(EmergencyAlertView emergencyAlertView);
+        void setEmergencyCallLogView(EmergencyCallLogView emergencyCallLogView);
         void pushVoiceData(String voiceBase64);
         void getUserDashboardInfo();
         void signOutClicked();
@@ -82,8 +93,11 @@ public interface DashboardContract {
         void getLocations();
         void getTeams();
         void generateCode();
-        void emergencyAccept();
-        void emergencyReject(String reason);
+        void updateDeviceInfo();
+        void getEmergencyCallLogs(String codeType,boolean isFromSearch);
+        void searchCode(String code);
+        void onCodeDelete(EmergencyCalllogResponse.Datum codeLog);
+        void onCodeInfoClicked(String codeID);
 
 
 

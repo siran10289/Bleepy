@@ -71,6 +71,7 @@ public class DeliverxFBMessagingService extends FirebaseMessagingService {
                     mIntent.putExtra(Constants.KEY_VOICE_DATA, remoteMessage.getData().get(Constants.KEY_VOICE_DATA));
                     mIntent.putExtra(Constants.KEY_RESPONDERS, remoteMessage.getData().get(Constants.KEY_RESPONDERS));
                     mIntent.putExtra(Constants.KEY_LOCATION, remoteMessage.getData().get(Constants.KEY_LOCATION));
+                    mIntent.putExtra(Constants.KEY_NOTIFICATION_TYPE,remoteMessage.getData().get(Constants.KEY_NOTIFICATION_TYPE));
                     LocalBroadcastManager.getInstance(this).sendBroadcast(mIntent);
                 }
 
@@ -91,6 +92,7 @@ public class DeliverxFBMessagingService extends FirebaseMessagingService {
         intent.putExtra(Constants.KEY_VOICE_DATA, remoteMessage.getData().get(Constants.KEY_VOICE_DATA));
         intent.putExtra(Constants.KEY_RESPONDERS, remoteMessage.getData().get(Constants.KEY_RESPONDERS));
         intent.putExtra(Constants.KEY_LOCATION, remoteMessage.getData().get(Constants.KEY_LOCATION));
+        intent.putExtra(Constants.KEY_NOTIFICATION_TYPE,remoteMessage.getData().get(Constants.KEY_NOTIFICATION_TYPE));
 
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP|Intent.FLAG_ACTIVITY_SINGLE_TOP);
 

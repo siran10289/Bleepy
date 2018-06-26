@@ -108,10 +108,13 @@ public abstract class BaseFragment extends Fragment implements BaseView,DialogLi
     public void showListenerDialog(String errorMsg) {
 
     }
+    @Override
+    public void showErrorMessage(String message, CoordinatorLayout coordinatorLayout) {
 
+    }
     @Override
     public void showErrorMessage(String message) {
-
+        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -23,22 +23,33 @@ import bleepy.pack.com.bleepy.models.callforhelp.TeamsResponse;
 import bleepy.pack.com.bleepy.models.callforhelp.VoiceUpdateResponse;
 import bleepy.pack.com.bleepy.models.common.CommonRequest;
 import bleepy.pack.com.bleepy.models.common.CommonResponse;
+import bleepy.pack.com.bleepy.models.common.UpdateFCMTokenInfoRequest;
+import bleepy.pack.com.bleepy.models.common.UpdateFCMTokenResponse;
 import bleepy.pack.com.bleepy.models.dashboard.ChangePasswordRequest;
 import bleepy.pack.com.bleepy.models.dashboard.DashboardInfoRequest;
 import bleepy.pack.com.bleepy.models.dashboard.DashboardInfoResponse;
 import bleepy.pack.com.bleepy.models.dashboard.UpdateProfileRequest;
 import bleepy.pack.com.bleepy.models.dashboard.UserProfileResponse;
+import bleepy.pack.com.bleepy.models.emegencycalllog.CodeLogMembersResponse;
+import bleepy.pack.com.bleepy.models.emegencycalllog.DeleteCodeRequest;
+import bleepy.pack.com.bleepy.models.emegencycalllog.EmergencyCalllogRequest;
+import bleepy.pack.com.bleepy.models.emegencycalllog.EmergencyCalllogResponse;
 import bleepy.pack.com.bleepy.models.myschedule.MyScheduleListResponse;
+import bleepy.pack.com.bleepy.models.signup.UpdateDeviceInfoReq;
 import bleepy.pack.com.bleepy.models.signup.UpdateDeviceInfoResponse;
 import bleepy.pack.com.bleepy.models.team.GetTeamMembersRequest;
 import bleepy.pack.com.bleepy.models.team.GroupMembersResponse;
+import bleepy.pack.com.bleepy.utils.AppUtils;
 import bleepy.pack.com.bleepy.utils.Validation;
 import bleepy.pack.com.bleepy.utils.preferences.PrefsManager;
 import bleepy.pack.com.bleepy.view.base.BaseView;
 import bleepy.pack.com.bleepy.view.base.LoadListener;
+import bleepy.pack.com.bleepy.view.calllogs.EmergencyCallLogsActivity;
 import bleepy.pack.com.bleepy.view.signup.PackageInfoInteractor;
 
+import static bleepy.pack.com.bleepy.BleepyApplication.refreshedFCMToken;
 import static bleepy.pack.com.bleepy.utils.Constants.DEBUG_MODE;
+import static bleepy.pack.com.bleepy.utils.Constants.IS_FCM_TOKEN_UPDATED;
 import static bleepy.pack.com.bleepy.utils.Constants.KEY_USERID;
 import static bleepy.pack.com.bleepy.utils.Constants.STATUS_FAILURE;
 import static bleepy.pack.com.bleepy.utils.Constants.STATUS_SUCCESS;
@@ -58,6 +69,7 @@ public class DashboardPresenterImpl implements DashboardContract.Presenter {
     private DashboardContract.SettingsView mSettingsView;
     private DashboardContract.CallForHelpView mCallForHelpView;
     private DashboardContract.EmergencyAlertView mEmergencyAlertView;
+    private DashboardContract.EmergencyCallLogView mEmergencyCallLogView;
     private Activity mActivity;
 
     public DashboardPresenterImpl(Activity activity,Context context, ApiInteractor apiInteractor, PrefsManager prefsManager, PackageInfoInteractor mPackageInfoInteractor) {
@@ -107,6 +119,11 @@ public class DashboardPresenterImpl implements DashboardContract.Presenter {
     }
 
     @Override
+    public void setEmergencyCallLogView(DashboardContract.EmergencyCallLogView emergencyCallLogView) {
+        this.mEmergencyCallLogView=emergencyCallLogView;
+    }
+
+    @Override
     public void pushVoiceData(String voiceBase64) {
         PushVoiceRequest pushVoiceRequest=new PushVoiceRequest();
         pushVoiceRequest.setVoiceRecord(voiceBase64);
@@ -124,8 +141,11 @@ public class DashboardPresenterImpl implements DashboardContract.Presenter {
 
     @Override
     public void signOutClicked() {
-        mPrefsManager.clearPreferences();
-        mDashboardView.navigateToHome();
+        CommonRequest commonRequest=new CommonRequest();
+        commonRequest.setUserid(mPrefsManager.getIntKeyValueFromPrefsByKey(KEY_USERID));
+        Log.e("Request:",new Gson().toJson(commonRequest).toString());
+        mApiInteractor.logout(mDashboardView,commonRequest,mLogoutListener,true);
+
 
     }
 
@@ -215,19 +235,59 @@ public class DashboardPresenterImpl implements DashboardContract.Presenter {
     }
 
     @Override
-    public void emergencyAccept() {
-        EmergencyAlertAcceptRequest emergencyAlertAcceptRequest=new EmergencyAlertAcceptRequest();
-        emergencyAlertAcceptRequest.setCodeId(mEmergencyAlertView.getCodeID());
-        emergencyAlertAcceptRequest.setUserId(String.valueOf(mPrefsManager.getIntKeyValueFromPrefsByKey(KEY_USERID)));
-        emergencyAlertAcceptRequest.setCodeRespondTime(getTime());
-        emergencyAlertAcceptRequest.setUserStatus(mEmergencyAlertView.getUserStatus());
-        mApiInteractor.acceptRejectEmergency(mActivity,mEmergencyAlertView,emergencyAlertAcceptRequest,mEmergencyAlertResponseLoadListener,false);
+    public void updateDeviceInfo() {
+        if(refreshedFCMToken!=null) {
+            UpdateFCMTokenInfoRequest updateDeviceInfoReq = new UpdateFCMTokenInfoRequest();
+            updateDeviceInfoReq.setDeviceType("0");
+            updateDeviceInfoReq.setAppid(refreshedFCMToken);
+            updateDeviceInfoReq.setUserid(String.valueOf(mPrefsManager.getIntKeyValueFromPrefsByKey(KEY_USERID)));
+            updateDeviceInfoReq.setLocation("0.0,0.0");
+            updateDeviceInfoReq.setDeviceid(AppUtils.getDeviceID(mActivity));
+            Log.e("Input:",new Gson().toJson(updateDeviceInfoReq).toString());
+            mApiInteractor.updateFCMInfo(mActivity,mDashboardView,updateDeviceInfoReq,mUpdateFCMTokenResponseLoadListener,false);
+        }
     }
 
     @Override
-    public void emergencyReject(String reason) {
+    public void getEmergencyCallLogs(String codeType,boolean isFromSearch) {
+        EmergencyCalllogRequest emergencyCalllogRequest=new EmergencyCalllogRequest();
+        if(isFromSearch) {
+            if(!mEmergencyCallLogView.getSearchableCodeID().isEmpty()){
+                emergencyCalllogRequest.setFlag(codeType);
+                emergencyCalllogRequest.setCodeId(mEmergencyCallLogView.getSearchableCodeID());
+            }else{
+                emergencyCalllogRequest.setCodeType(codeType);
+                isFromSearch=false;
+            }
+        }else{
+            emergencyCalllogRequest.setCodeType(codeType);
+        }
+        emergencyCalllogRequest.setUserId(String.valueOf(mPrefsManager.getIntKeyValueFromPrefsByKey(KEY_USERID)));
+        Log.e("Input:",new Gson().toJson(emergencyCalllogRequest).toString());
+        mApiInteractor.getEmergencyCodeLogs(mActivity,mEmergencyCallLogView,emergencyCalllogRequest,isFromSearch,mEmergencyCalllogResponseLoadListener,true);
+    }
+
+    @Override
+    public void searchCode(String code) {
 
     }
+
+    @Override
+    public void onCodeDelete(EmergencyCalllogResponse.Datum codeLog) {
+        DeleteCodeRequest deleteCodeRequest=new DeleteCodeRequest();
+        deleteCodeRequest.setCodeId(codeLog.getCode());
+        deleteCodeRequest.setUserId(String.valueOf(mPrefsManager.getIntKeyValueFromPrefsByKey(KEY_USERID)));
+        mApiInteractor.onDeleteCode(mActivity,mEmergencyCallLogView,deleteCodeRequest,mCodeDeleteListener,true);
+    }
+
+    @Override
+    public void onCodeInfoClicked(String codeID) {
+        DeleteCodeRequest deleteCodeRequest=new DeleteCodeRequest();
+        deleteCodeRequest.setCodeId(codeID);
+        mApiInteractor.onCodeInfoClicked(mActivity,mEmergencyCallLogView,deleteCodeRequest,mCodeLogMembersResponseLoadListener,true);
+
+    }
+
 
     private String getDate(){
         Date cDate = Calendar.getInstance().getTime();
@@ -319,6 +379,9 @@ public class DashboardPresenterImpl implements DashboardContract.Presenter {
             if (responseBody != null) {
                 switch (responseBody.getMeta().getStatusType()) {
                     case STATUS_SUCCESS:
+                        if(!mPrefsManager.getBooleanKeyValueFromPrefs(IS_FCM_TOKEN_UPDATED)){
+                            updateDeviceInfo();
+                        }
                         mDashboardView.setDashboardInfo(responseBody);
                         break;
                     case STATUS_FAILURE:
@@ -623,6 +686,152 @@ public class DashboardPresenterImpl implements DashboardContract.Presenter {
 
         }
     };
+
+    LoadListener<UpdateFCMTokenResponse> mUpdateFCMTokenResponseLoadListener = new LoadListener<UpdateFCMTokenResponse>() {
+        @Override
+        public void onSuccess(UpdateFCMTokenResponse responseBody) {
+
+            if (responseBody != null) {
+                switch (responseBody.getMeta().getStatusType()) {
+                    case STATUS_SUCCESS:
+                        mPrefsManager.saveBooleanKeyValueToPrefs(IS_FCM_TOKEN_UPDATED,true);
+                        break;
+                    case STATUS_FAILURE:
+                        mDashboardView.showErrorDialog(responseBody.getMeta().getMessage());
+                        break;
+                }
+
+            }
+
+        }
+
+        @Override
+        public void onFailure(Throwable t) {
+
+        }
+
+        @Override
+        public void onError(Object error) {
+
+        }
+    };
+
+    LoadListener<EmergencyCalllogResponse> mEmergencyCalllogResponseLoadListener = new LoadListener<EmergencyCalllogResponse>() {
+        @Override
+        public void onSuccess(EmergencyCalllogResponse responseBody) {
+
+            if (responseBody != null) {
+                switch (responseBody.getMeta().getStatusType()) {
+                    case STATUS_SUCCESS:
+                        mEmergencyCallLogView.setEmergencyLogs(responseBody);
+                        break;
+                    case STATUS_FAILURE:
+                        mEmergencyCallLogView.clearViews();
+                        mEmergencyCallLogView.showErrorDialog(responseBody.getMeta().getMessage());
+                        break;
+                }
+
+            }
+
+        }
+
+        @Override
+        public void onFailure(Throwable t) {
+
+        }
+
+        @Override
+        public void onError(Object error) {
+
+        }
+    };
+    LoadListener<CommonResponse> mCodeDeleteListener = new LoadListener<CommonResponse>() {
+        @Override
+        public void onSuccess(CommonResponse responseBody) {
+
+            if (responseBody != null) {
+                switch (responseBody.getMeta().getStatusType()) {
+                    case STATUS_SUCCESS:
+                        mEmergencyCallLogView.setDeleteCodeResponse(responseBody);
+                        break;
+                    case STATUS_FAILURE:
+                        mEmergencyCallLogView.showErrorDialog(responseBody.getMeta().getMessage());
+                        break;
+                }
+
+            }
+
+        }
+
+        @Override
+        public void onFailure(Throwable t) {
+
+        }
+
+        @Override
+        public void onError(Object error) {
+
+        }
+    };
+    LoadListener<CodeLogMembersResponse> mCodeLogMembersResponseLoadListener = new LoadListener<CodeLogMembersResponse>() {
+        @Override
+        public void onSuccess(CodeLogMembersResponse responseBody) {
+
+            if (responseBody != null) {
+                switch (responseBody.getMeta().getStatusType()) {
+                    case STATUS_SUCCESS:
+                        mEmergencyCallLogView.setCodeLogMembersList(responseBody);
+                        break;
+                    case STATUS_FAILURE:
+                        mEmergencyCallLogView.showErrorDialog(responseBody.getMeta().getMessage());
+                        break;
+                }
+
+            }
+
+        }
+
+        @Override
+        public void onFailure(Throwable t) {
+
+        }
+
+        @Override
+        public void onError(Object error) {
+
+        }
+    };
+    LoadListener<CommonResponse> mLogoutListener = new LoadListener<CommonResponse>() {
+        @Override
+        public void onSuccess(CommonResponse responseBody) {
+
+            if (responseBody != null) {
+                switch (responseBody.getMeta().getStatusType()) {
+                    case STATUS_SUCCESS:
+                        mPrefsManager.clearPreferences();
+                        mDashboardView.navigateToHome();
+                        break;
+                    case STATUS_FAILURE:
+                        mDashboardView.showErrorDialog(responseBody.getMeta().getMessage());
+                        break;
+                }
+
+            }
+
+        }
+
+        @Override
+        public void onFailure(Throwable t) {
+
+        }
+
+        @Override
+        public void onError(Object error) {
+
+        }
+    };
+
+
 
 
 

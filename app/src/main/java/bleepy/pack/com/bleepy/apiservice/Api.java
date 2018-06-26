@@ -18,6 +18,8 @@ import bleepy.pack.com.bleepy.models.callforhelp.VoiceUpdateResponse;
 import bleepy.pack.com.bleepy.models.common.CommonRequest;
 import bleepy.pack.com.bleepy.models.common.CommonResponse;
 import bleepy.pack.com.bleepy.models.common.ImageUploadResponse;
+import bleepy.pack.com.bleepy.models.common.UpdateFCMTokenInfoRequest;
+import bleepy.pack.com.bleepy.models.common.UpdateFCMTokenResponse;
 import bleepy.pack.com.bleepy.models.common.UserImageUploadRequest;
 import bleepy.pack.com.bleepy.models.common.WelcomeScreenRequest;
 import bleepy.pack.com.bleepy.models.common.WelcomeScreenResponse;
@@ -26,6 +28,10 @@ import bleepy.pack.com.bleepy.models.dashboard.DashboardInfoRequest;
 import bleepy.pack.com.bleepy.models.dashboard.DashboardInfoResponse;
 import bleepy.pack.com.bleepy.models.dashboard.UpdateProfileRequest;
 import bleepy.pack.com.bleepy.models.dashboard.UserProfileResponse;
+import bleepy.pack.com.bleepy.models.emegencycalllog.CodeLogMembersResponse;
+import bleepy.pack.com.bleepy.models.emegencycalllog.DeleteCodeRequest;
+import bleepy.pack.com.bleepy.models.emegencycalllog.EmergencyCalllogRequest;
+import bleepy.pack.com.bleepy.models.emegencycalllog.EmergencyCalllogResponse;
 import bleepy.pack.com.bleepy.models.myschedule.MyScheduleListResponse;
 import bleepy.pack.com.bleepy.models.signin.ForgetCredentialsRequest;
 import bleepy.pack.com.bleepy.models.signin.SigninRequest;
@@ -53,6 +59,8 @@ import retrofit2.http.Query;
 public interface Api {
     @POST("loginauth")
     Call<SigninResponse> validateUser(@Body SigninRequest signinRequest);
+    @POST("signout")
+    Call<CommonResponse> logout(@Body CommonRequest signinRequest);
     @POST("userreg")
     Call<SignupResponse> registerUser(@Body RegisterUserRequest registerUserRequest);
     @POST("updateprofile")
@@ -93,6 +101,16 @@ public interface Api {
     Call<CodeInformationResponse> getCodeInfo(@Body CodeInfoRequest pushVoiceRequest);
     @POST("codeconfirmation")
     Call<CodeConfirmationResponse> getCodeConformation(@Body CodeConfirmationRequest pushVoiceRequest);
+    @POST("uapi")
+    Call<UpdateFCMTokenResponse> updateFCMInfo(@Body UpdateFCMTokenInfoRequest pushVoiceRequest);
+    @POST("emergencycodelogs")
+    Call<EmergencyCalllogResponse> getEmergencyCallLogs(@Body EmergencyCalllogRequest pushVoiceRequest);
+    @POST("cancelcode")
+    Call<CommonResponse> onCodeDelete(@Body DeleteCodeRequest pushVoiceRequest);
+    @POST("codefetchdetails")
+    Call<CodeLogMembersResponse> getCodeLogInfo(@Body DeleteCodeRequest pushVoiceRequest);
+    @POST("emergencycodesearch")
+    Call<EmergencyCalllogResponse> searchEmergencyCallLogs(@Body EmergencyCalllogRequest pushVoiceRequest);
 
 
     /*@PUT("update-email")

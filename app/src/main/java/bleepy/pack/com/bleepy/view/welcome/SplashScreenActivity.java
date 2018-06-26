@@ -34,6 +34,7 @@ import bleepy.pack.com.bleepy.view.signup.SignupContract;
 
 import static bleepy.pack.com.bleepy.BleepyApplication.refreshedFCMToken;
 import static bleepy.pack.com.bleepy.utils.Constants.FCM_BUNDLE;
+import static bleepy.pack.com.bleepy.utils.Constants.KEY_CODE_ID;
 import static bleepy.pack.com.bleepy.utils.Constants.KEY_IS_VALID_USER;
 import static bleepy.pack.com.bleepy.utils.Constants.KEY_MY_OBJ;
 import static bleepy.pack.com.bleepy.utils.Constants.KEY_USERID;
@@ -89,10 +90,11 @@ public class SplashScreenActivity extends BaseActivity implements SignupContract
         if (mPrefsManager.getBooleanKeyValueFromPrefs(KEY_IS_VALID_USER)) {
             mIntent = new Intent(SplashScreenActivity.this, DashboardActivity.class);
             //mIntent.putExtra(KEY_USERID,mPrefsManager.getIntKeyValueFromPrefsByKey(KEY_USERID));
-            if(mFCMBundle!=null) {
+            if(mFCMBundle!=null&&mFCMBundle.getString(KEY_CODE_ID)!=null) {
                 mIntent.putExtra(FCM_BUNDLE, mFCMBundle);
             }
             startActivity(mIntent);
+            mFCMBundle=null;
             finish();
         } else {
             mIntent = new Intent(SplashScreenActivity.this, WelcomeActivity.class);

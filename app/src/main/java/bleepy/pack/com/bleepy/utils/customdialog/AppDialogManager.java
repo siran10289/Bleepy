@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.util.List;
@@ -36,6 +37,9 @@ import bleepy.pack.com.bleepy.R;
 import bleepy.pack.com.bleepy.models.callforhelp.LocationsResponse;
 import bleepy.pack.com.bleepy.models.callforhelp.TeamsResponse;
 import bleepy.pack.com.bleepy.models.common.EmergencyCode;
+import bleepy.pack.com.bleepy.models.emegencycalllog.CodeLogMembersResponse;
+import bleepy.pack.com.bleepy.utils.AppUtils;
+import bleepy.pack.com.bleepy.view.adapter.CodeLogMembersAdapter;
 import bleepy.pack.com.bleepy.view.adapter.LocationsAdapter;
 import bleepy.pack.com.bleepy.view.adapter.TeamsAdapter;
 import bleepy.pack.com.bleepy.view.callforhelp.CallForHelpActivity;
@@ -48,12 +52,14 @@ import static bleepy.pack.com.bleepy.utils.Constants.ALERT_REMOVE;
 
 public class AppDialogManager {
     static Dialog networkAlertDialog = null;
-    static MediaPlayer mediaPlayer=new MediaPlayer();;
+    static MediaPlayer mediaPlayer;
     private static final int SHOW_PROGRESS = 2;
     static AppCompatSeekBar seekBar;
     static TextView tvCurrentTime;
     public static Handler mHandler = new MessageHandler();
     public static Dialog confirmationDialog;
+    public static Dialog emergencyAlertDialog;
+
 
     public static void showAlertDialog(final Activity activity, String message,String type,boolean isCancelNeeded) {
 
@@ -306,27 +312,33 @@ public class AppDialogManager {
         } catch (ClassCastException e) {
             throw new ClassCastException(object.toString() + " must implement DialogListener");
         }
+        if(emergencyAlertDialog!=null&&emergencyAlertDialog.isShowing()){
+            emergencyAlertDialog.dismiss();
+        }
 
-        Dialog dialog = new Dialog(activity);
-        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(true);
-        dialog.setContentView(R.layout.dialog_waiting_acceptance);
-        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        TextView tvDescription=dialog.findViewById(R.id.tv_dialog_description);
-        TextView tvResponders=dialog.findViewById(R.id.tvResponders);
-        TextView tvLocation=dialog.findViewById(R.id.tvLocation);
-        Button btnAccept=dialog.findViewById(R.id.btnAccept);
-        Button btnReject=dialog.findViewById(R.id.btnReject);
-        ImageView ivPlay=dialog.findViewById(R.id.ivPlay);
-        seekBar=dialog.findViewById(R.id.seekBar);
-        tvCurrentTime=dialog.findViewById(R.id.tvCurrentTime);
-        LinearLayout llAudioPlayer=dialog.findViewById(R.id.llAudioPlayer);
+        emergencyAlertDialog = new Dialog(activity);
+        emergencyAlertDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        emergencyAlertDialog.setCancelable(false);
+        emergencyAlertDialog.setContentView(R.layout.dialog_waiting_acceptance);
+        emergencyAlertDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        TextView tvDescription=emergencyAlertDialog.findViewById(R.id.tv_dialog_description);
+        TextView tvResponders=emergencyAlertDialog.findViewById(R.id.tvResponders);
+        TextView tvLocation=emergencyAlertDialog.findViewById(R.id.tvLocation);
+        Button btnAccept=emergencyAlertDialog.findViewById(R.id.btnAccept);
+        Button btnReject=emergencyAlertDialog.findViewById(R.id.btnReject);
+        ImageView ivPlay=emergencyAlertDialog.findViewById(R.id.ivPlay);
+        seekBar=emergencyAlertDialog.findViewById(R.id.seekBar);
+        tvCurrentTime=emergencyAlertDialog.findViewById(R.id.tvCurrentTime);
+        LinearLayout llAudioPlayer=emergencyAlertDialog.findViewById(R.id.llAudioPlayer);
         tvDescription.setText(emergencyCode.getDescription()+"");
         tvLocation.setText(emergencyCode.getLocation()+"");
+        if(mediaPlayer==null){
+            mediaPlayer=new MediaPlayer();
+        }
         if(emergencyCode.getResponseCount()!=null) {
             tvResponders.setText("(" + emergencyCode.getResponseCount() + ")R");
         }else{
-            tvResponders.setVisibility(View.GONE);
+            tvResponders.setText("(" + 0 + ")R");
         }
         if(emergencyCode.getVoiceData()!=null) {
             try {
@@ -345,6 +357,25 @@ public class AppDialogManager {
                     @Override
                     public void onCompletion(MediaPlayer mp) {
                         seekBar.setProgress(0);
+                        ivPlay.setImageDrawable(ContextCompat.getDrawable(activity,R.drawable.ic_play));
+                    }
+                });
+                seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        if (fromUser) {
+                            mediaPlayer.seekTo(progress);
+                        }
+                    }
+
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
                     }
                 });
 
@@ -356,8 +387,8 @@ public class AppDialogManager {
                 public void onClick(View v) {
                     if(mediaPlayer.isPlaying()) {
                         ivPlay.setImageDrawable(ContextCompat.getDrawable(activity,R.drawable.ic_play));
-                        mHandler.removeMessages(SHOW_PROGRESS);
                         if(mediaPlayer!=null)mediaPlayer.pause();
+                        mHandler.removeMessages(SHOW_PROGRESS);
 
 
                     }else{
@@ -374,21 +405,31 @@ public class AppDialogManager {
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog.dismiss();
-               mCallback.onAcceptClicked(emergencyCode);
+                //dialog.dismiss();
+                mHandler.removeMessages(SHOW_PROGRESS);
+                mediaPlayer.stop();
+                mediaPlayer.release();
+                mediaPlayer=null;
+                emergencyAlertDialog.dismiss();
+                mCallback.onAcceptClicked(emergencyCode);
             }
         });
         btnReject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               mCallback.onRejectClicked();
+                mHandler.removeMessages(SHOW_PROGRESS);
+                mediaPlayer.stop();
+                mediaPlayer.release();
+                mediaPlayer=null;
+                emergencyAlertDialog.dismiss();
+               mCallback.onRejectClicked(emergencyCode);
             }
         });
 
-        dialog.show();
+        emergencyAlertDialog.show();
     }
 
-    public static void showRejectionReasonDialog(final Activity activity, Object object) {
+    public static void showRejectionReasonDialog(final Activity activity, Object object,EmergencyCode emergencyCode) {
         final DialogListener.BaseListener mCallback;
         try {
             mCallback = (DialogListener.BaseListener) object;
@@ -401,18 +442,20 @@ public class AppDialogManager {
         rejectionReasonDialog.setCancelable(true);
         rejectionReasonDialog.setContentView(R.layout.dialog_rejection_reason);
         rejectionReasonDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-        Button btnAccept=rejectionReasonDialog.findViewById(R.id.btnAccept);
+        Button btnOK=rejectionReasonDialog.findViewById(R.id.btnOK);
         Button btnCancel=rejectionReasonDialog.findViewById(R.id.btnCancel);
-        btnAccept.setOnClickListener(new View.OnClickListener() {
+        EditText etRejectionReason=rejectionReasonDialog.findViewById(R.id.etRejectionReason);
+        btnOK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                rejectionReasonDialog.dismiss();
+                mCallback.onRejectReasonOKClicked(etRejectionReason.getText().toString().trim());
             }
         });
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+               rejectionReasonDialog.dismiss();
             }
         });
 
@@ -444,11 +487,12 @@ public class AppDialogManager {
             @Override
             public void onClick(View v) {
                 confirmationDialog.dismiss();
-               mCallback.CancelClicked();
+                mCallback.CancelClicked();
             }
         });
-
-        confirmationDialog.show();
+        if(!AppUtils.isAppIsInBackground(activity) ){
+            confirmationDialog.show();
+        }
     }
     private static class MessageHandler extends Handler {
 
@@ -479,6 +523,69 @@ public class AppDialogManager {
         tvCurrentTime.setText(stringForTime(position));
         return position;
 
+    }
+    public static void showCustomDialog(final Activity activity, String title,String message) {
+
+
+        Dialog rejectionReasonDialog = new Dialog(activity);
+        rejectionReasonDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        rejectionReasonDialog.setCancelable(true);
+        rejectionReasonDialog.setContentView(R.layout.dialog_common);
+        rejectionReasonDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        Button btnOK=rejectionReasonDialog.findViewById(R.id.btnOK);
+        TextView tvTitle=rejectionReasonDialog.findViewById(R.id.tvTitle);
+        TextView tvMessage=rejectionReasonDialog.findViewById(R.id.tvMessage);
+        tvTitle.setText(title);
+        tvMessage.setText(message);
+        btnOK.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rejectionReasonDialog.dismiss();
+
+            }
+        });
+
+
+        rejectionReasonDialog.show();
+    }
+    public static void showCodeLogMembersDialog(final Activity activity, Object object, List<CodeLogMembersResponse.Datum> membersList) {
+        final DialogListener.EmergencyCodeLogListener mCallback;
+        CodeLogMembersAdapter teamsAdapter;
+        try {
+            mCallback = (DialogListener.EmergencyCodeLogListener) object;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(object.toString() + " must implement DialogListener");
+        }
+        Dialog dialog = new Dialog(activity);
+        dialog.getWindow().setBackgroundDrawableResource(R.color.black_translucent);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.dialog_code_info);
+        dialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
+
+        Button btnCancelCode=dialog.findViewById(R.id.btnCancelCode);
+        TextView tvCodeID=dialog.findViewById(R.id.tvCodeID);
+        tvCodeID.setText(membersList.get(0).getTeamname()+"");
+        RecyclerView rvTeamMembers=dialog.findViewById(R.id.rvTeamMembers);
+        rvTeamMembers.setHasFixedSize(true);
+        rvTeamMembers.setLayoutManager(new LinearLayoutManager(activity));
+        teamsAdapter=new CodeLogMembersAdapter(activity,membersList);
+        rvTeamMembers.setAdapter(teamsAdapter);
+
+        btnCancelCode.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        tvCodeID.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
 

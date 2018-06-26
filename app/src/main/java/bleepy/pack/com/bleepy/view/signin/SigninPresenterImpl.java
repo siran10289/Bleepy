@@ -240,11 +240,11 @@ public class SigninPresenterImpl implements SigninContract.Presenter {
                         if(responseBody.getData()!=null&&responseBody.getData()!=null){
                             if(responseBody.getData().getUserid()!=null){
 
-                                if(responseBody.getData().getUserStatus()==1){
+                                if(responseBody.getData().getUserStatus().equalsIgnoreCase("1")){
                                       mPrefsManager.saveBooleanKeyValueToPrefs(KEY_IS_VALID_USER,true);
                                       mPrefsManager.saveKeyValuePairToPrefs(KEY_USERID,Integer.parseInt(responseBody.getData().getUserid()));
-                                    mSigninView.navigateToDashBoard(responseBody.getData().getUserid());
-                                }else if(responseBody.getData().getUserStatus()==0){
+                                    mSigninView.navigateToDashBoard(responseBody.getMeta().getMessage(),responseBody.getData().getUserid());
+                                }else if(responseBody.getData().getUserStatus().equalsIgnoreCase("0")){
                                     mSigninView.openDeviceRegistrationDialog(responseBody);
                                 }
 

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.widget.EditText;
 
 import bleepy.pack.com.bleepy.models.common.WelcomeScreenResponse;
+import bleepy.pack.com.bleepy.models.signup.SignupResponse;
 import bleepy.pack.com.bleepy.models.signup.UpdateRegKeyResponse;
 import bleepy.pack.com.bleepy.view.base.BasePresenter;
 import bleepy.pack.com.bleepy.view.base.BaseView;
@@ -17,7 +18,7 @@ public interface SignupContract {
     interface RegisterationView extends BaseView {
         void navigateToImageCropper(String imageURI);
         void setImageOnImageView(byte[] imageByteArray);
-        void showSelectDeviceTypeDialog();
+        void showSelectDeviceTypeDialog(SignupResponse responseBody);
         void setError(EditText editText, String message);
         String fcmToken();
         String getFirstName();

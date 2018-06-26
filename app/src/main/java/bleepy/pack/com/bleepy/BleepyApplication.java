@@ -15,6 +15,7 @@
  */
 package bleepy.pack.com.bleepy;
 
+import android.app.Activity;
 import android.support.multidex.MultiDexApplication;
 
 import com.google.firebase.iid.FirebaseInstanceId;
@@ -31,6 +32,7 @@ import bleepy.pack.com.bleepy.di.module.ApplicationModule;
 public class BleepyApplication extends MultiDexApplication {
   public static String refreshedFCMToken;
   private ApplicationComponent applicationComponent;
+  private Activity mCurrentActivity = null;
   @Override
   public void onCreate() {
     super.onCreate();
@@ -48,6 +50,12 @@ public class BleepyApplication extends MultiDexApplication {
 
   public  ApplicationComponent getApplicationComponent() {
     return this.applicationComponent;
+  }
+  public Activity getCurrentActivity(){
+    return mCurrentActivity;
+  }
+  public void setCurrentActivity(Activity mCurrentActivity){
+    this.mCurrentActivity = mCurrentActivity;
   }
 
 }

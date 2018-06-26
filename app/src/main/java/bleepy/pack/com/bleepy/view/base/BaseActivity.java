@@ -33,6 +33,7 @@ import bleepy.pack.com.bleepy.models.callforhelp.CodeCreationResponse;
 import bleepy.pack.com.bleepy.models.callforhelp.CodeInformationResponse;
 import bleepy.pack.com.bleepy.models.callforhelp.EmergencyAlertResponse;
 import bleepy.pack.com.bleepy.models.common.EmergencyCode;
+import bleepy.pack.com.bleepy.utils.AppUtils;
 import bleepy.pack.com.bleepy.utils.customdialog.AppDialogManager;
 import bleepy.pack.com.bleepy.utils.customdialog.CustomProgressDialog;
 import bleepy.pack.com.bleepy.utils.customdialog.DialogListener;
@@ -46,11 +47,13 @@ import static bleepy.pack.com.bleepy.utils.Constants.KEY_CODE_CREATED;
 import static bleepy.pack.com.bleepy.utils.Constants.KEY_CODE_ID;
 import static bleepy.pack.com.bleepy.utils.Constants.KEY_DESCRIPTION;
 import static bleepy.pack.com.bleepy.utils.Constants.KEY_LOCATION;
+import static bleepy.pack.com.bleepy.utils.Constants.KEY_NOTIFICATION_TYPE;
 import static bleepy.pack.com.bleepy.utils.Constants.KEY_RESPONDERS;
 import static bleepy.pack.com.bleepy.utils.Constants.KEY_VOICE_DATA;
 import static bleepy.pack.com.bleepy.utils.Constants.STATUS_FAILURE;
 import static bleepy.pack.com.bleepy.utils.Constants.STATUS_SUCCESS;
 import static bleepy.pack.com.bleepy.utils.customdialog.AppDialogManager.confirmationDialog;
+import static bleepy.pack.com.bleepy.utils.customdialog.AppDialogManager.showCustomDialog;
 import static bleepy.pack.com.bleepy.utils.customdialog.AppDialogManager.showWaitingAcceptanceDialog;
 
 
@@ -74,14 +77,18 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
   BaseContract.Presenter mPresenter;
   EmergencyCode mEmergencyCode;
   String userStatus;
+  public BleepyApplication mBleepyApplication;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    mBleepyApplication = (BleepyApplication) this.getApplicationContext();
+    initLocalBrodCast();
     this.getApplicationComponent().inject(this);
     supportFragmentManager=this.getSupportFragmentManager();
     mPresenter=new BasePresenterImpl(BaseActivity.this,mApiInteractor,mPrefsManager,mPackageInfoInteractor);
     mPresenter.setEmergencyAlertView(BaseActivity.this);
+    mPresenter.setView(this);
 
 
   }
@@ -89,7 +96,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
   public void setContentView(int layoutResID) {
     super.setContentView(layoutResID);
     ButterKnife.bind(this);
-    initLocalBrodCast();
     progressDialog = CustomProgressDialog.getInstance(this);
 
   }
@@ -226,13 +232,18 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
 
   @Override
   public void showErrorDialog(String errorMsg) {
-    AppDialogManager.showAlertDialog(BaseActivity.this,errorMsg,"ERROR",false);
+    if(!isFinishing()) {
+      AppDialogManager.showAlertDialog(BaseActivity.this, errorMsg, "ERROR", false);
+    }
   }
 
   @Override
   public void showErrorDialog(int resID) {
     AppDialogManager.showAlertDialog(BaseActivity.this,getString(resID),"ERROR",false);
 
+  }
+  public void showSuccessDialog(String title,String message){
+    showCustomDialog(BaseActivity.this,title,message);
   }
 
   @Override
@@ -246,15 +257,17 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
   }
 
   @Override
-  public void showErrorMessage(String message) {
-    Toast.makeText(BaseActivity.this, message, Toast.LENGTH_SHORT).show();
-  }
-  public static void showSnackBar(String message, CoordinatorLayout coordinatorLayout){
+  public void showErrorMessage(String message, CoordinatorLayout coordinatorLayout) {
     Snackbar snackbar = Snackbar.make(coordinatorLayout, message, Snackbar.LENGTH_SHORT);
     snackbar.show();
   }
-
-
+  @Override
+  public void showErrorMessage(String message) {
+    Toast.makeText(BaseActivity.this, message, Toast.LENGTH_SHORT).show();
+  }
+  public  void showSnackBar(String message, CoordinatorLayout coordinatorLayout){
+    AppUtils.showSnackBar(BaseActivity.this,message,coordinatorLayout);
+  }
   @Override
   public void onOKPressed() {
 
@@ -284,20 +297,33 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     public void onReceive(Context context, Intent intent) {
       if (ACTION_INTENT_FCM_RECIEVED.equals(intent.getAction())) {
         Bundle bundle=intent.getExtras();
-        EmergencyCode emergencyCode=new EmergencyCode();
-        emergencyCode.setCodeID(bundle.getString(KEY_CODE_ID));
-        emergencyCode.setCodeCreatedDate(bundle.getString(KEY_CODE_CREATED));
-        emergencyCode.setDescription(bundle.getString(KEY_DESCRIPTION));
-        emergencyCode.setVoiceData(bundle.getString(KEY_VOICE_DATA));
-        emergencyCode.setLocation(bundle.getString(KEY_LOCATION));
-        emergencyCode.setResponseCount(bundle.getString(KEY_RESPONDERS));
-        mEmergencyCode=emergencyCode;
-        openWaitingAccptanceDialog(emergencyCode);
+        if(bundle.getString(KEY_NOTIFICATION_TYPE)!=null) {
+          switch (bundle.getString(KEY_NOTIFICATION_TYPE)) {
+            case "0":
+              EmergencyCode emergencyCode = new EmergencyCode();
+              emergencyCode.setCodeID(bundle.getString(KEY_CODE_ID));
+              emergencyCode.setCodeCreatedDate(bundle.getString(KEY_CODE_CREATED));
+              emergencyCode.setDescription(bundle.getString(KEY_DESCRIPTION));
+              emergencyCode.setVoiceData(bundle.getString(KEY_VOICE_DATA));
+              emergencyCode.setLocation(bundle.getString(KEY_LOCATION));
+              emergencyCode.setResponseCount(bundle.getString(KEY_RESPONDERS));
+              mEmergencyCode = emergencyCode;
+              openWaitingAccptanceDialog(emergencyCode);
+              break;
+            case "4":
+              openCodeRejectionDialog("Code " + bundle.getString(KEY_CODE_ID) + " has been returned check the agent's comments as emergency code log, Please send new code");
+              break;
+          }
+        }
+
       }
     }
   };
   public void openWaitingAccptanceDialog(EmergencyCode emergencyCode){
       showWaitingAcceptanceDialog(BaseActivity.this,BaseActivity.this,emergencyCode);
+  }
+  public void openCodeRejectionDialog(String message){
+      showCustomDialog(BaseActivity.this,"Verification failed",message);
   }
   public void showConfirmationDialog(CodeInformationResponse responseBody){
 
@@ -305,11 +331,16 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     if(data!=null) {
       if (data.getCodeStatus().equalsIgnoreCase("0") || data.getCodeStatus().equalsIgnoreCase("1")) {
         if(confirmationDialog!=null){
-          if(!confirmationDialog.isShowing()){
-            confirmationDialog.show();
-          }
+          confirmationDialog.cancel();
+            AppDialogManager.showConfirmationDialog(mBleepyApplication.getCurrentActivity(), BaseActivity.this);
+
         }else {
-          AppDialogManager.showConfirmationDialog(BaseActivity.this, this);
+          /*if(!isFinishing()) {
+            AppDialogManager.showConfirmationDialog(BaseActivity.this, BaseActivity.this);
+          }*/
+
+            AppDialogManager.showConfirmationDialog(mBleepyApplication.getCurrentActivity(), BaseActivity.this);
+
         }
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -334,15 +365,20 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
     mPresenter.emergencyAccept();
   }
   @Override
-  public void onRejectClicked(){
+  public void onRejectClicked(EmergencyCode emergencyCode){
+    this.mEmergencyCode=emergencyCode;
     userStatus="0";
-    AppDialogManager.showRejectionReasonDialog(BaseActivity.this,this);
+    AppDialogManager.showRejectionReasonDialog(BaseActivity.this,this,mEmergencyCode);
+  }
+  public void onRejectReasonOKClicked(String reason){
+    userStatus="0";
+    mPresenter.emergencyReject(reason);
   }
   public void confirmClicked(){
     mPresenter.codeConfirmation(getCodeID(),"2");
   }
   public void CancelClicked(){
-    mPresenter.codeConfirmation(getCodeID(),"3");
+    //mPresenter.codeConfirmation(getCodeID(),"3");
   }
   @Override
   public String getCodeID() {
@@ -390,5 +426,10 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
   protected void onDestroy() {
     super.onDestroy();
     unRegisterLocalBroadCast();
+  }
+
+  @Override
+  protected void onStop() {
+    super.onStop();
   }
 }

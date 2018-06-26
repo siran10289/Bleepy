@@ -32,44 +32,65 @@ public class SigninResponse {
         this.data = data;
     }
 
-    public class Datum {
+    public class MenuVisibility {
 
-        @SerializedName("screen_label")
+        @SerializedName("CH")
         @Expose
-        private String screenLabel;
-        @SerializedName("screen_description")
+        private String cH;
+        @SerializedName("MT")
         @Expose
-        private String screenDescription;
-        @SerializedName("Imagepath")
+        private String mT;
+        @SerializedName("ECL")
         @Expose
-        private String imagepath;
+        private String eCL;
+        @SerializedName("MS")
+        @Expose
+        private String mS;
+        @SerializedName("TS")
+        @Expose
+        private String tS;
 
-        public String getScreenLabel() {
-            return screenLabel;
+        public String getCH() {
+            return cH;
         }
 
-        public void setScreenLabel(String screenLabel) {
-            this.screenLabel = screenLabel;
+        public void setCH(String cH) {
+            this.cH = cH;
         }
 
-        public String getScreenDescription() {
-            return screenDescription;
+        public String getMT() {
+            return mT;
         }
 
-        public void setScreenDescription(String screenDescription) {
-            this.screenDescription = screenDescription;
+        public void setMT(String mT) {
+            this.mT = mT;
         }
 
-        public String getImagepath() {
-            return imagepath;
+        public String getECL() {
+            return eCL;
         }
 
-        public void setImagepath(String imagepath) {
-            this.imagepath = imagepath;
+        public void setECL(String eCL) {
+            this.eCL = eCL;
+        }
+
+        public String getMS() {
+            return mS;
+        }
+
+        public void setMS(String mS) {
+            this.mS = mS;
+        }
+
+        public String getTS() {
+            return tS;
+        }
+
+        public void setTS(String tS) {
+            this.tS = tS;
         }
 
     }
-
     public class Meta {
 
         @SerializedName("Status")
@@ -165,7 +186,10 @@ public class SigninResponse {
         private String importantMessage;
         @SerializedName("user_status")
         @Expose
-        private int user_status;
+        private String userStatus;
+        @SerializedName("menu_visibility")
+        @Expose
+        private List<MenuVisibility> menuVisibility = null;
 
         public String getUsername() {
             return username;
@@ -311,12 +335,21 @@ public class SigninResponse {
             this.importantMessage = importantMessage;
         }
 
-        public int getUserStatus() {
-            return user_status;
+        public String getUserStatus() {
+            return userStatus;
         }
 
-        public void setUserStatus(int status_type) {
-            this.user_status = status_type;
+        public void setUserStatus(String userStatus) {
+            this.userStatus = userStatus;
         }
+
+        public List<MenuVisibility> getMenuVisibility() {
+            return menuVisibility;
+        }
+
+        public void setMenuVisibility(List<MenuVisibility> menuVisibility) {
+            this.menuVisibility = menuVisibility;
+        }
+
     }
 }

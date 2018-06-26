@@ -45,6 +45,7 @@ import bleepy.pack.com.bleepy.utils.customdialog.DialogListener;
 import bleepy.pack.com.bleepy.view.adapter.NavDrawerAdapter;
 import bleepy.pack.com.bleepy.view.base.BaseActivity;
 import bleepy.pack.com.bleepy.view.callforhelp.CallForHelpActivity;
+import bleepy.pack.com.bleepy.view.calllogs.EmergencyCallLogsActivity;
 import bleepy.pack.com.bleepy.view.signin.SigninActivity;
 import bleepy.pack.com.bleepy.view.team.GroupMembersActivity;
 import butterknife.BindView;
@@ -58,6 +59,7 @@ import static bleepy.pack.com.bleepy.utils.Constants.KEY_CODE_CREATED;
 import static bleepy.pack.com.bleepy.utils.Constants.KEY_CODE_ID;
 import static bleepy.pack.com.bleepy.utils.Constants.KEY_DESCRIPTION;
 import static bleepy.pack.com.bleepy.utils.Constants.KEY_LOCATION;
+import static bleepy.pack.com.bleepy.utils.Constants.KEY_NOTIFICATION_TYPE;
 import static bleepy.pack.com.bleepy.utils.Constants.KEY_NOTI_TYPE;
 import static bleepy.pack.com.bleepy.utils.Constants.KEY_RESPONDERS;
 import static bleepy.pack.com.bleepy.utils.Constants.KEY_USERID;
@@ -100,14 +102,21 @@ public class DashboardActivity extends BaseActivity
                 //showWaitingAcceptanceDialog1(DashboardActivity.this,DashboardActivity.this);
                 Bundle bundle=getIntent().getBundleExtra(FCM_BUNDLE);
                 if(bundle!=null) {
-                    EmergencyCode emergencyCode = new EmergencyCode();
-                    emergencyCode.setCodeID(bundle.getString(KEY_CODE_ID));
-                    emergencyCode.setCodeCreatedDate(bundle.getString(KEY_CODE_CREATED));
-                    emergencyCode.setDescription(bundle.getString(KEY_DESCRIPTION));
-                    emergencyCode.setVoiceData(bundle.getString(KEY_VOICE_DATA));
-                    emergencyCode.setLocation(bundle.getString(KEY_LOCATION));
-                    emergencyCode.setLocation(bundle.getString(KEY_RESPONDERS));
-                    openWaitingAccptanceDialog(emergencyCode);
+                    switch (bundle.getString(KEY_NOTIFICATION_TYPE)){
+                        case "0":
+                            EmergencyCode emergencyCode=new EmergencyCode();
+                            emergencyCode.setCodeID(bundle.getString(KEY_CODE_ID));
+                            emergencyCode.setCodeCreatedDate(bundle.getString(KEY_CODE_CREATED));
+                            emergencyCode.setDescription(bundle.getString(KEY_DESCRIPTION));
+                            emergencyCode.setVoiceData(bundle.getString(KEY_VOICE_DATA));
+                            emergencyCode.setLocation(bundle.getString(KEY_LOCATION));
+                            emergencyCode.setResponseCount(bundle.getString(KEY_RESPONDERS));
+                            openWaitingAccptanceDialog(emergencyCode);
+                            break;
+                        case "4":
+                            openCodeRejectionDialog("Code "+bundle.getString(KEY_CODE_ID)+" has been returned check the agent's comments as emergency code log, Please send new code");
+                            break;
+                    }
                 }
 
         }
@@ -167,8 +176,8 @@ public class DashboardActivity extends BaseActivity
     private void handleArcMenu(){
         mArcMenu.showTooltip(true);
         mArcMenu.setToolTipBackColor(Color.TRANSPARENT);
-        mArcMenu.setToolTipCorner(2);
-        mArcMenu.setToolTipPadding(1);
+        mArcMenu.setToolTipCorner(0);
+        mArcMenu.setToolTipPadding(0);
         mArcMenu.setToolTipTextSize(12);
         mArcMenu.setToolTipTextColor(ContextCompat.getColor(DashboardActivity.this,R.color.white));
 
@@ -185,6 +194,7 @@ public class DashboardActivity extends BaseActivity
                 }
             });
         }
+
     }
     private void onBottomMenuItemClicked(int position){
         containerShadow.setVisibility(View.GONE);
@@ -198,6 +208,8 @@ public class DashboardActivity extends BaseActivity
                 startNewActivity(mIntent);
                 break;
             case 2:
+                mIntent=new Intent(DashboardActivity.this,EmergencyCallLogsActivity.class);
+                startNewActivity(mIntent);
                 break;
             case 3:
                 mIntent=new Intent(DashboardActivity.this,MyScheduleActivity.class);
@@ -332,11 +344,49 @@ public class DashboardActivity extends BaseActivity
         duoDrawerToggle.setHomeAsUpIndicator(R.drawable.menu_icon_white);
     }
     @Override
-    public void setDashboardInfo(DashboardInfoResponse dashboardInfo) {
+    public void setDashboardInfo(DashboardInfoResponse dashboardInfo) { //todo
         this.dashboardInfo=dashboardInfo;
+        adjustArcMenuBasedOnUserType();
         setProfileInfo(dashboardInfo);
         replaceFragment(R.id.container, HomeFragment.newInstance(new Gson().toJson(dashboardInfo).toString()));
 
+    }
+    private void adjustArcMenuBasedOnUserType(){
+        DashboardInfoResponse.MenuVisibility menuVisibility=dashboardInfo.getData().getMenuVisibility().get(0);
+        for (int i = 0; i < MenuItem.STR.length; i++) {
+            switch (i) {
+                case 0:
+                    if (menuVisibility.getCH().equalsIgnoreCase("0") ){
+                        mArcMenu.removeChildAt(0);
+
+                    }
+                    break;
+                case 1:
+                    if (menuVisibility.getMT().equalsIgnoreCase("0")) {
+                        mArcMenu.removeChildAt(1);
+
+                    }
+                    break;
+                case 2:
+                    if (menuVisibility.getECL().equalsIgnoreCase("0")) {
+                        mArcMenu.removeChildAt(2);
+
+                    }
+                    break;
+                case 3:
+                    if (menuVisibility.getMS().equalsIgnoreCase("0")) {
+                        mArcMenu.removeChildAt(3);
+
+                    }
+                    break;
+                case 4:
+                    if (menuVisibility.getTS().equalsIgnoreCase("0")) {
+                        mArcMenu.removeChildAt(4);
+                    }
+                    break;
+
+            }
+        }
     }
     private void setProfileInfo(DashboardInfoResponse dashboardInfoResponse){
         if(dashboardInfoResponse.getData()!=null&&dashboardInfoResponse.getData().getProfileImage()!=null) {
@@ -367,15 +417,10 @@ public class DashboardActivity extends BaseActivity
 
     @Override
     public void navigateToHome() {
-
         Intent intent=new Intent(DashboardActivity.this, SigninActivity.class);
         startNewActivity(intent);
         finish();
     }
-
-
-
-
     private class ViewHolder {
         private DuoDrawerLayout mDuoDrawerLayout;
         private DuoMenuView mDuoMenuView;
@@ -386,5 +431,11 @@ public class DashboardActivity extends BaseActivity
             mDuoMenuView = (DuoMenuView) mDuoDrawerLayout.getMenuView();
             mToolbar = (Toolbar) findViewById(R.id.toolbar);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mBleepyApplication.setCurrentActivity(DashboardActivity.this);
     }
 }

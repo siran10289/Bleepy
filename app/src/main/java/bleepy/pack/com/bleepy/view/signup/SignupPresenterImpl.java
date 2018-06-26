@@ -329,7 +329,8 @@ public class SignupPresenterImpl implements SignupContract.Presenter {
                 if(responseBody!=null){
                     switch (responseBody.getMeta().getStatusType()){
                         case STATUS_SUCCESS:
-                            mRegistrationView.showSelectDeviceTypeDialog();
+
+                            mRegistrationView.showSelectDeviceTypeDialog(responseBody);
                             break;
                         case STATUS_FAILURE:
                             mRegistrationView.showErrorDialog(responseBody.getMeta().getMessage());

@@ -59,6 +59,7 @@ import bleepy.pack.com.bleepy.models.callforhelp.TeamsResponse;
 import bleepy.pack.com.bleepy.models.callforhelp.VoiceUpdateResponse;
 import bleepy.pack.com.bleepy.utils.customdialog.AppDialogManager;
 import bleepy.pack.com.bleepy.utils.customdialog.DialogListener;
+import bleepy.pack.com.bleepy.view.Dashboard.DashboardActivity;
 import bleepy.pack.com.bleepy.view.Dashboard.DashboardContract;
 import bleepy.pack.com.bleepy.view.adapter.LocationsAdapter;
 import bleepy.pack.com.bleepy.view.base.BaseActivity;
@@ -458,8 +459,20 @@ public class CallForHelpActivity extends BaseActivity implements
     @Override
     public void onTeamsSelected(List<TeamsResponse.Datum> selectedTeamsList) {
         if(selectedTeamsList!=null&&selectedTeamsList.size()>0){
-            selectedTeamID=selectedTeamsList.get(0).getTeamid();
-            etSearchTeams.setText(selectedTeamsList.get(0).getTeamname());
+            for(int i=0;i<selectedTeamsList.size();i++){
+                if(i==selectedTeamsList.size()-1){
+                    selectedTeamID=selectedTeamID+selectedTeamsList.get(i).getTeamid();
+                }else{
+                    selectedTeamID=selectedTeamID+selectedTeamsList.get(i).getTeamid()+",";
+                }
+            }
+            //selectedTeamID=selectedTeamsList.get(0).getTeamid();
+            if(selectedTeamsList.size()>1){
+                etSearchTeams.setText(selectedTeamsList.size()+" Teams selected");
+            }else{
+                etSearchTeams.setText(selectedTeamsList.get(0).getTeamname());
+            }
+
         }
 
     }
@@ -490,7 +503,15 @@ public class CallForHelpActivity extends BaseActivity implements
 
     @Override
     public void setCodeCreationResponse(CodeCreationResponse response) {
-        showErrorDialog(response.getMeta().getMessage());
+        etDescription.setText("");
+        if(recordedFile!=null)recordedFile.delete();
+        etSearchTeams.setText("");
+        etSearchLocations.setText("");
+        selectedLocationID="";
+        selectedTeamID="";
+        llPalyerView.setVisibility(View.GONE);
+        AppDialogManager.showCustomDialog(CallForHelpActivity.this,"Success","Code "+response.getData().getCode()+" generated.");
+
     }
 
     @Override
@@ -574,5 +595,9 @@ public class CallForHelpActivity extends BaseActivity implements
             mHandler.sendEmptyMessage(SHOW_PROGRESS);
         }
     };
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mBleepyApplication.setCurrentActivity(CallForHelpActivity.this);
+    }
 }

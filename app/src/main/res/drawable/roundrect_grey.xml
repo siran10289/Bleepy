@@ -4,7 +4,7 @@
     <stroke
         android:width="0.5dp"
         android:color="@color/textColorSecondary"/>
-    <corners android:radius="@dimen/six_dp"/>
+
     <solid android:color="@color/textColorPrimaryInverse"/>
 </shape>
 

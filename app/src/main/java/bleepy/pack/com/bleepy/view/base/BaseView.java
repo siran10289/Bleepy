@@ -1,6 +1,7 @@
 package bleepy.pack.com.bleepy.view.base;
 
 import android.content.Intent;
+import android.support.design.widget.CoordinatorLayout;
 
 /**
  * Created by siranjeevi on 9/6/17.
@@ -23,8 +24,8 @@ public interface BaseView {
     void showErrorDialog(int resID);
 
     void showListenerDialog(String errorMsg);
-
-    void showErrorMessage(String message);
+    public void showErrorMessage(String message);
+    public void showErrorMessage(String message, CoordinatorLayout coordinatorLayout);
 
     void setError(int resID, String message);
 

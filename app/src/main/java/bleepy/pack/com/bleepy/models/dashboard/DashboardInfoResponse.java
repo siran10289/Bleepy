@@ -3,10 +3,13 @@ package bleepy.pack.com.bleepy.models.dashboard;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by Siranjeevi Rengarajan on 6/13/2018.
  */
 public class DashboardInfoResponse {
+
     @SerializedName("meta")
     @Expose
     private Meta meta;
@@ -29,7 +32,65 @@ public class DashboardInfoResponse {
     public void setData(Data data) {
         this.data = data;
     }
+    public class MenuVisibility {
 
+        @SerializedName("CH")
+        @Expose
+        private String cH;
+        @SerializedName("MT")
+        @Expose
+        private String mT;
+        @SerializedName("ECL")
+        @Expose
+        private String eCL;
+        @SerializedName("MS")
+        @Expose
+        private String mS;
+        @SerializedName("TS")
+        @Expose
+        private String tS;
+
+        public String getCH() {
+            return cH;
+        }
+
+        public void setCH(String cH) {
+            this.cH = cH;
+        }
+
+        public String getMT() {
+            return mT;
+        }
+
+        public void setMT(String mT) {
+            this.mT = mT;
+        }
+
+        public String getECL() {
+            return eCL;
+        }
+
+        public void setECL(String eCL) {
+            this.eCL = eCL;
+        }
+
+        public String getMS() {
+            return mS;
+        }
+
+        public void setMS(String mS) {
+            this.mS = mS;
+        }
+
+        public String getTS() {
+            return tS;
+        }
+
+        public void setTS(String tS) {
+            this.tS = tS;
+        }
+
+    }
     public class Meta {
 
         @SerializedName("Status")
@@ -75,6 +136,9 @@ public class DashboardInfoResponse {
         @SerializedName("username")
         @Expose
         private String username;
+        @SerializedName("designation")
+        @Expose
+        private String designation;
         @SerializedName("profile_image")
         @Expose
         private String profileImage;
@@ -87,10 +151,9 @@ public class DashboardInfoResponse {
         @SerializedName("important_message")
         @Expose
         private String importantMessage;
-        @SerializedName("designation")
+        @SerializedName("menu_visibility")
         @Expose
-        private String designation;
-
+        private List<MenuVisibility> menuVisibility = null;
 
         public String getUsername() {
             return username;
@@ -98,6 +161,14 @@ public class DashboardInfoResponse {
 
         public void setUsername(String username) {
             this.username = username;
+        }
+
+        public String getDesignation() {
+            return designation;
+        }
+
+        public void setDesignation(String designation) {
+            this.designation = designation;
         }
 
         public String getProfileImage() {
@@ -132,12 +203,13 @@ public class DashboardInfoResponse {
             this.importantMessage = importantMessage;
         }
 
-        public String getDesignation() {
-            return designation;
+        public List<MenuVisibility> getMenuVisibility() {
+            return menuVisibility;
         }
 
-        public void setDesignation(String designation) {
-            this.designation = designation;
+        public void setMenuVisibility(List<MenuVisibility> menuVisibility) {
+            this.menuVisibility = menuVisibility;
         }
+
     }
 }

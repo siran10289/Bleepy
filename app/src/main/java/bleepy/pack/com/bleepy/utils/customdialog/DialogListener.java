@@ -26,7 +26,8 @@ public interface DialogListener {
     }
     public interface BaseListener{
         void onAcceptClicked(EmergencyCode emergencyCode);
-        void onRejectClicked();
+        void onRejectClicked(EmergencyCode emergencyCode);
+        void onRejectReasonOKClicked(String reason);
         void confirmClicked();
         void CancelClicked();
     }
@@ -35,6 +36,9 @@ public interface DialogListener {
     }
     public interface CallForHelpListener{
         void onTeamsSelected(List<TeamsResponse.Datum> selectedTeams);
+
+    }
+    public interface EmergencyCodeLogListener{
 
     }
 

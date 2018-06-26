@@ -30,6 +30,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
@@ -83,7 +84,7 @@ import java.util.regex.Pattern;
 import bleepy.pack.com.bleepy.R;
 
 import static bleepy.pack.com.bleepy.utils.Constants.AUDIO_PATH;
-
+import static iknow.android.utils.BaseUtils.getContext;
 
 
 @SuppressWarnings("unused")
@@ -105,6 +106,10 @@ public class AppUtils {
             Log.e(TAG, e.toString());
         }
         return "";
+    }
+    public static String getDeviceID(Context context){
+        return Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
     }
 
 
@@ -938,10 +943,10 @@ public class AppUtils {
         Snackbar snackbar= Snackbar.make(coordinatorLayout,message, Snackbar.LENGTH_SHORT);
         snackbar.setActionTextColor(Color.GREEN);
         View view1=snackbar.getView();
-        view1.setBackgroundColor(ContextCompat.getColor(context,R.color.colorPrimary));
+        view1.setBackgroundColor(ContextCompat.getColor(context,R.color.popup_color));
         TextView tv=(TextView)view1.findViewById(android.support.design.R.id.snackbar_text);
         tv.setTextColor(Color.WHITE);
-        tv.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/AvenirNextLTPro-DemiCn.otf"));
+        //tv.setTypeface(Typeface.createFromAsset(context.getAssets(), "fonts/AvenirNextLTPro-DemiCn.otf"));
         snackbar.show();
     }
 

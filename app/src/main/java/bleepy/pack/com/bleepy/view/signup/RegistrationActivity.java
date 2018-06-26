@@ -48,6 +48,7 @@ import bleepy.pack.com.bleepy.di.component.DaggerSignupComponent;
 import bleepy.pack.com.bleepy.di.component.SignupComponent;
 import bleepy.pack.com.bleepy.di.module.SignupModule;
 import bleepy.pack.com.bleepy.models.common.UserImageUploadRequest;
+import bleepy.pack.com.bleepy.models.signup.SignupResponse;
 import bleepy.pack.com.bleepy.utils.AppUtils;
 import bleepy.pack.com.bleepy.utils.Constants;
 import bleepy.pack.com.bleepy.utils.customdialog.AppDialogManager;
@@ -93,6 +94,7 @@ public class RegistrationActivity extends BaseActivity implements SignupContract
     Toolbar mToolBar;
     @BindView(R.id.toolbar_title)
     TextView toolbar_title;
+    @BindView(R.id.coordinatorLayout)CoordinatorLayout mCoordinatorLayout;
     private SignupComponent signupComponent;
     private String imageString = "";
     private Intent mIntent;
@@ -212,8 +214,11 @@ public class RegistrationActivity extends BaseActivity implements SignupContract
     }
 
     @Override
-    public void showSelectDeviceTypeDialog() {
-        AppDialogManager.showDeviceTypeDialog(RegistrationActivity.this, RegistrationActivity.this);
+    public void showSelectDeviceTypeDialog(SignupResponse responseBody) {
+        //showSnackBar(responseBody.getMeta().getMessage(),mCoordinatorLayout);
+        showErrorMessage(responseBody.getMeta().getMessage());
+        navigateToLogin();
+        //AppDialogManager.showDeviceTypeDialog(RegistrationActivity.this, RegistrationActivity.this);
     }
 
     @Override
@@ -286,6 +291,11 @@ public class RegistrationActivity extends BaseActivity implements SignupContract
     public void navigateToKeyRegistration() {
         mIntent = new Intent(RegistrationActivity.this, RegistrationKeyActivity.class);
         mIntent.putExtra(SCREEN_TYPE, REG_KEY_SCREEN);
+        startNewActivity(mIntent);
+        finish();
+    }
+    public void navigateToLogin() {
+        mIntent = new Intent(RegistrationActivity.this, SigninActivity.class);
         startNewActivity(mIntent);
         finish();
     }

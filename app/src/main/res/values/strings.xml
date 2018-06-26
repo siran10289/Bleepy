@@ -130,6 +130,13 @@
     <string name="confirmation">Confirmation</string>
     <string name="cancel">Cancel</string>
     <string name="confirm">Confirm</string>
+    <string name="error_rejection_reason">Please enter your rejection reason</string>
+    <string name="accept">Accept</string>
+    <string name="dummy_text">Lorem Ipsum is simply dummy text of the printing and typesetting industry</string>
+    <string name="title_code_logs">Emergency code logs</string>
+    <string name="retured_codes">Retured codes</string>
+    <string name="codes_register">Codes register</string>
+    <string name="search_for_code">Search for code</string>
 
 
 </resources>

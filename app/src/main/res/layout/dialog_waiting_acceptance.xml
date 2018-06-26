@@ -71,7 +71,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/fifteen_dp"
             android:gravity="center"
-            android:text="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"/>
+            android:text="@string/dummy_text"/>
 
         <LinearLayout
             android:id="@+id/llAudioPlayer"
@@ -117,7 +117,7 @@
                 android:layout_height="@dimen/thirty_five_dp"
                 android:layout_weight="1"
                 android:background="@drawable/bg_login_submit"
-                android:text="@string/ok"
+                android:text="@string/accept"
                 android:textColor="@color/white"
                 android:textStyle="bold"/>
 

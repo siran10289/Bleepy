@@ -58,6 +58,8 @@ public class Constants {
     public static final String KEY_LOCATION="location";
     public static final Integer DELAY_MILLISECONDS=10000;
     public static final String FCM_BUNDLE="FCM_BUNDLE";
+    public static final String KEY_NOTIFICATION_TYPE="notification_type";
+    public static final String IS_FCM_TOKEN_UPDATED="IS_FCM_TOKEN_UPDATED";
 
 
 

@@ -14,6 +14,7 @@ import bleepy.pack.com.bleepy.di.component.DaggerDashboardComponent;
 import bleepy.pack.com.bleepy.di.component.DashboardComponent;
 import bleepy.pack.com.bleepy.di.module.DashboardModule;
 import bleepy.pack.com.bleepy.models.team.GroupMembersResponse;
+import bleepy.pack.com.bleepy.view.Dashboard.DashboardActivity;
 import bleepy.pack.com.bleepy.view.Dashboard.DashboardContract;
 import bleepy.pack.com.bleepy.view.Dashboard.MyScheduleActivity;
 import bleepy.pack.com.bleepy.view.adapter.GroupMembersAdapter;
@@ -64,5 +65,10 @@ public class GroupMembersActivity extends BaseActivity implements DashboardContr
         mGroupMembersAdapter=new GroupMembersAdapter(GroupMembersActivity.this,groupMembersResponse.getData());
         rvTeamMembers.setAdapter(mGroupMembersAdapter);
 
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mBleepyApplication.setCurrentActivity(GroupMembersActivity.this);
     }
 }

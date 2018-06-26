@@ -35,6 +35,7 @@
     <color name="text_light_red">#F05028</color>
     <color name="text_light_black2">#999999</color>
     <color name="black_translucent">#33000000</color>
+    <color name="light_grep_color">#5E6677</color>
 
     <color name="editTextColor">#333333</color>
     <color name="textColorPrimary">#333333</color>
@@ -83,6 +84,7 @@
         <item>@color/darkred</item>
 
     </integer-array>
+    <color name="popup_color">#2DBBB2</color>
 
 
 </resources>

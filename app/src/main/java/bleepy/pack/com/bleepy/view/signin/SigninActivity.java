@@ -157,7 +157,9 @@ public class SigninActivity extends BaseActivity implements
     }
 
     @Override
-    public void navigateToDashBoard(String userID) {
+    public void navigateToDashBoard(String message,String userID) {
+        showErrorMessage(message);
+        //showErrorDialog(message);
         mIntent = new Intent(SigninActivity.this, DashboardActivity.class);
         mIntent.putExtra(KEY_USERID, Integer.parseInt(userID));
         startNewActivity(mIntent);
