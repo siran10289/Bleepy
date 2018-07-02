@@ -34,8 +34,8 @@
                     android:layout_height="@dimen/fifteen_dp"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
-                    android:layout_marginBottom="@dimen/ten_dp"
-                    android:layout_marginRight="@dimen/ten_dp"
+                    android:layout_marginBottom="@dimen/five_dp"
+                    android:layout_marginRight="@dimen/five_dp"
                     android:background="@drawable/round_shape_green"/>
 
             </RelativeLayout>

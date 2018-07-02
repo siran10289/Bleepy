@@ -147,7 +147,7 @@ public class CodeRegisterAdapter extends RecyclerView.Adapter<CodeRegisterAdapte
         if(callLog.getCodeVoicePath()==null){
             holder.llAudioPlayer.setVisibility(View.GONE);
         }
-        if(callLog.getCodeStatus().equalsIgnoreCase("1")) {
+        if(callLog.getCodeStatus().equalsIgnoreCase("1")||callLog.getCodeStatus().equalsIgnoreCase("2")) {
             if(callLog.getCode()!=null)holder.tvCodeID.setText("Code # "+callLog.getCode());
             holder.tvCodeID.setCompoundDrawablesWithIntrinsicBounds(null, null, context.getDrawable(R.drawable.info_icon), null);
         }else if(callLog.getCodeStatus().equalsIgnoreCase("0")){

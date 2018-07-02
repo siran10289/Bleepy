@@ -83,6 +83,7 @@ import java.util.regex.Pattern;
 
 import bleepy.pack.com.bleepy.R;
 
+import static bleepy.pack.com.bleepy.fcm.DeliverxFBMessagingService.soundName;
 import static bleepy.pack.com.bleepy.utils.Constants.AUDIO_PATH;
 import static iknow.android.utils.BaseUtils.getContext;
 
@@ -1132,6 +1133,13 @@ public class AppUtils {
         }
 
         return isInBackground;
+    }
+    public static void playNotificationSound(Activity activity){
+        if(soundName!=null) {
+            int resID = activity.getResources().getIdentifier(soundName, "raw", activity.getPackageName());
+            MediaPlayer mediaPlayer = MediaPlayer.create(activity, resID);
+            mediaPlayer.start();
+        }
     }
 
 }

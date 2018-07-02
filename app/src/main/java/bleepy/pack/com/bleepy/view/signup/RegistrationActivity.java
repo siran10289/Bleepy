@@ -216,7 +216,8 @@ public class RegistrationActivity extends BaseActivity implements SignupContract
     @Override
     public void showSelectDeviceTypeDialog(SignupResponse responseBody) {
         //showSnackBar(responseBody.getMeta().getMessage(),mCoordinatorLayout);
-        showErrorMessage(responseBody.getMeta().getMessage());
+        Toast.makeText(RegistrationActivity.this, responseBody.getMeta().getMessage(), Toast.LENGTH_LONG).show();
+        //showErrorMessage(responseBody.getMeta().getMessage());
         navigateToLogin();
         //AppDialogManager.showDeviceTypeDialog(RegistrationActivity.this, RegistrationActivity.this);
     }

@@ -150,7 +150,7 @@ public class CallForHelpActivity extends BaseActivity implements
 
         }*/
         myAudioRecorder = new MediaRecorder();
-        myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        myAudioRecorder.setAudioSource(MediaRecorder.AudioSource.VOICE_RECOGNITION);
         myAudioRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
         myAudioRecorder.setAudioEncoder(MediaRecorder.OutputFormat.AMR_NB);
         myAudioRecorder.setOutputFile(recordingFile.getAbsolutePath());

@@ -210,6 +210,7 @@ public class DashboardPresenterImpl implements DashboardContract.Presenter {
     public void getTeams() {
       CommonRequest commonRequest=new CommonRequest();
       commonRequest.setUserid(mPrefsManager.getIntKeyValueFromPrefsByKey(KEY_USERID));
+      Log.e("Input:",new Gson().toJson(commonRequest).toString());
       mApiInteractor.getTeams(mActivity,mCallForHelpView,commonRequest,mTeamsResponseLoadListener,true);
 
     }

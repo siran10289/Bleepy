@@ -31,7 +31,7 @@
                 android:layout_centerInParent="true"
                 android:text="Welcome"
                 android:paddingStart="@dimen/twenty_five_dp"
-                android:paddingTop="@dimen/thirty_dp"
+                android:paddingTop="@dimen/ten_dp"
                 android:textColor="@color/white"
                 android:textSize="@dimen/twenty_sp"
                 android:textStyle="bold"/>
@@ -42,7 +42,7 @@
                 android:layout_alignParentEnd="true"
                 android:gravity="end|center"
                 android:layout_marginRight="@dimen/twenty_five_dp"
-                android:layout_marginBottom="@dimen/ten_dp"
+                android:layout_marginBottom="@dimen/five_dp"
                 android:layout_alignParentBottom="true"
                 android:orientation="horizontal">
                 <TextView
@@ -72,17 +72,17 @@
                 android:orientation="vertical"
                 android:layout_below="@+id/tvWelcome"
                 android:layout_centerInParent="true"
-                android:layout_marginTop="@dimen/ten_dp"
-                android:layout_marginBottom="@dimen/forty_dp"
+                android:layout_marginTop="@dimen/five_dp"
+                android:layout_marginBottom="@dimen/twenty_dp"
                 android:layout_marginLeft="@dimen/twenty_dp"
                 android:layout_marginRight="@dimen/twenty_dp"
                 android:background="@drawable/bg_login_inner"
-                android:padding="@dimen/twenty_dp"
+                android:padding="@dimen/fifteen_dp"
                 android:gravity="center">
                 <EditText
                     android:id="@+id/etUserName"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/forty_dp"
+                    android:layout_height="@dimen/thirty_five_dp"
                     android:inputType="textEmailAddress"
                     android:layout_marginTop="@dimen/ten_dp"
                     android:background="@drawable/bg_login_inputs"
@@ -94,7 +94,7 @@
                 <EditText
                     android:id="@+id/etPassword"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/forty_dp"
+                    android:layout_height="@dimen/thirty_five_dp"
                     android:layout_marginTop="@dimen/ten_dp"
                     android:inputType="textPassword"
                     android:background="@drawable/bg_login_inputs"
@@ -125,11 +125,10 @@
                     android:id="@+id/btnLogin"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/thirty_five_dp"
-                    android:layout_marginTop="@dimen/ten_dp"
+                    android:layout_marginTop="@dimen/five_dp"
                     android:textColor="@color/white"
                     android:background="@drawable/bg_login_submit"
                     android:text="@string/login"/>
-
 
             </LinearLayout>
 

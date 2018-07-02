@@ -41,6 +41,7 @@ import bleepy.pack.com.bleepy.utils.preferences.PrefsManager;
 import bleepy.pack.com.bleepy.view.signup.PackageInfoInteractor;
 import butterknife.ButterKnife;
 
+import static bleepy.pack.com.bleepy.utils.AppUtils.playNotificationSound;
 import static bleepy.pack.com.bleepy.utils.Constants.ACTION_INTENT_FCM_RECIEVED;
 import static bleepy.pack.com.bleepy.utils.Constants.DELAY_MILLISECONDS;
 import static bleepy.pack.com.bleepy.utils.Constants.KEY_CODE_CREATED;
@@ -233,7 +234,8 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
   @Override
   public void showErrorDialog(String errorMsg) {
     if(!isFinishing()) {
-      AppDialogManager.showAlertDialog(BaseActivity.this, errorMsg, "ERROR", false);
+      //AppDialogManager.showAlertDialog(BaseActivity.this, errorMsg, "ERROR", false);
+      AppDialogManager.showCustomDialog(BaseActivity.this,"",errorMsg);
     }
   }
 
@@ -308,6 +310,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
               emergencyCode.setLocation(bundle.getString(KEY_LOCATION));
               emergencyCode.setResponseCount(bundle.getString(KEY_RESPONDERS));
               mEmergencyCode = emergencyCode;
+              playNotificationSound(BaseActivity.this);
               openWaitingAccptanceDialog(emergencyCode);
               break;
             case "4":
@@ -328,7 +331,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseView
   public void showConfirmationDialog(CodeInformationResponse responseBody){
 
     CodeInformationResponse.Data data=responseBody.getData();
-    if(data!=null) {
+    if(data!=null&&data.getCodeStatus()!=null) {
       if (data.getCodeStatus().equalsIgnoreCase("0") || data.getCodeStatus().equalsIgnoreCase("1")) {
         if(confirmationDialog!=null){
           confirmationDialog.cancel();

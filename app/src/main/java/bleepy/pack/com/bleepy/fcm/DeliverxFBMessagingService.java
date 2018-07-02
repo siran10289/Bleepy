@@ -37,6 +37,7 @@ public class DeliverxFBMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "MessagingService";
     private int notificationID=0;
+    public static String soundName;
 
 
     @Override
@@ -45,9 +46,11 @@ public class DeliverxFBMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "From: " + remoteMessage.getFrom());
             // Check if message contains a data payload.
             if (remoteMessage.getData().size() > 0) {
-                Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+                Log.e(TAG, "Message data payload: " + remoteMessage.getData());
             }
-
+            RemoteMessage.Notification notification=remoteMessage.getNotification();
+            Log.e("Sound:",notification.getSound());
+            soundName=notification.getSound();
             // Check if message contains a notification payload.
             if (remoteMessage.getNotification() != null) {
                 notificationID++;
@@ -62,7 +65,6 @@ public class DeliverxFBMessagingService extends FirebaseMessagingService {
 
                 if(AppUtils.isAppIsInBackground(getApplicationContext())) {
                     sendNotification(remoteMessage);
-
                 }else {
                     Intent mIntent = new Intent(ACTION_INTENT_FCM_RECIEVED);
                     mIntent.putExtra(Constants.KEY_DESCRIPTION, remoteMessage.getData().get(Constants.KEY_DESCRIPTION));

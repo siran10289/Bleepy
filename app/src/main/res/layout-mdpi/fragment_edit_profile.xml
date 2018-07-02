@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:app="http://schemas.android.com/apk/res-auto"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context=".view.Dashboard.EditProfileFragment">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/two_hundered_dp"
+        android:background="@color/colorPrimary"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="8.5">
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1.5"
+            android:layout_marginBottom="@dimen/ten_dp"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cv_notifications"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/ten_dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="2dp"
+                app:cardElevation="@dimen/five_dp"
+                app:cardUseCompatPadding="true"
+                app:contentPadding="@dimen/zero_dp">
+
+                <android.support.v4.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/ten_dp"
+                    android:layout_marginRight="@dimen/ten_dp"
+                    android:scrollbars="vertical"
+                    android:layout_weight="2"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    tools:showIn="@layout/activity_registration">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="@dimen/ten_dp"
+                        android:layout_weight="2"
+                        android:background="@android:color/white"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/ten_dp"
+                            android:layout_marginRight="@dimen/ten_dp"
+                            android:layout_marginTop="@dimen/fifty_dp"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <EditText
+                                    android:id="@+id/etFirstName"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/five_dp"
+                                    android:layout_weight="1"
+                                    android:focusable="false"
+                                    android:enabled="false"
+                                    android:focusableInTouchMode="true"
+                                    android:hint="@string/first_name"
+                                    android:inputType="textPersonName"
+                                    android:maxLines="1"
+                                    android:nextFocusDown="@+id/etSecondName"
+                                    android:textSize="@dimen/sixteen_sp"/>
+
+                                <EditText
+                                    android:id="@+id/etSecondName"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:enabled="false"
+                                    android:layout_marginTop="@dimen/five_dp"
+                                    android:layout_weight="1"
+                                    android:focusable="false"
+                                    android:focusableInTouchMode="true"
+                                    android:hint="@string/last_name"
+                                    android:inputType="textPersonName"
+                                    android:maxLines="1"
+                                    android:textSize="@dimen/sixteen_sp"/>
+
+                            </LinearLayout>
+
+
+                            <EditText
+                                android:id="@+id/etEmail"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/five_dp"
+                                android:focusable="false"
+                                android:enabled="false"
+                                android:focusableInTouchMode="true"
+                                android:hint="@string/email"
+                                android:inputType="textEmailAddress"
+                                android:maxLines="1"
+                                android:textSize="@dimen/sixteen_sp"/>
+
+                            <EditText
+                                android:id="@+id/etDesignation"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/five_dp"
+                                android:focusable="false"
+                                android:enabled="false"
+                                android:focusableInTouchMode="true"
+                                android:hint="@string/designation"
+                                android:inputType="text"
+                                android:maxLines="1"
+                                android:textSize="@dimen/sixteen_sp"/>
+
+                            <EditText
+                                android:id="@+id/etStaffId"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/five_dp"
+                                android:focusable="false"
+                                android:enabled="false"
+                                android:focusableInTouchMode="true"
+                                android:hint="@string/staff"
+                                android:inputType="text"
+                                android:maxLines="1"
+                                android:textSize="@dimen/sixteen_sp"/>
+
+                            <EditText
+                                android:id="@+id/etMobile"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/ten_dp"
+                                android:layout_marginTop="@dimen/five_dp"
+                                android:enabled="false"
+                                android:focusableInTouchMode="false"
+                                android:hint="@string/mobile"
+                                android:inputType="phone"
+                                android:maxLines="1"
+                                android:textSize="@dimen/sixteen_sp"/>
+
+                            <EditText
+                                android:id="@+id/etTeamID"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/ten_dp"
+                                android:layout_marginTop="@dimen/five_dp"
+                                android:focusable="false"
+                                android:enabled="false"
+                                android:focusableInTouchMode="true"
+                                android:hint="Team Id"
+                                android:inputType="text"
+                                android:maxLines="1"
+                                android:textSize="@dimen/sixteen_sp"/>
+
+
+
+                            <EditText
+                                android:id="@+id/etBleepID"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:enabled="false"
+                                android:layout_marginBottom="@dimen/twenty_dp"
+                                android:layout_marginTop="@dimen/five_dp"
+                                android:focusable="false"
+                                android:focusableInTouchMode="true"
+                                android:hint="Bleep Id"
+                                android:inputType="text"
+                                android:maxLines="1"
+                                android:textSize="@dimen/sixteen_sp"
+                                android:visibility="visible"/>
+
+                            <EditText
+                                android:id="@+id/etUserName"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:enabled="false"
+                                android:layout_marginBottom="@dimen/twenty_dp"
+                                android:layout_marginTop="@dimen/five_dp"
+                                android:focusable="false"
+                                android:focusableInTouchMode="true"
+                                android:hint="Username"
+                                android:inputType="text"
+                                android:maxLines="1"
+                                android:textSize="@dimen/sixteen_sp"
+                                android:visibility="visible"/>
+
+                            <RadioGroup
+                                android:id="@+id/rgDeviceType"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:enabled="false"
+                                android:focusable="false"
+                                android:orientation="horizontal">
+
+                                <android.support.v7.widget.AppCompatRadioButton
+                                    android:id="@+id/rbSharedDevice"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:clickable="false"
+                                    android:text="Shared device"/>
+
+                                <android.support.v7.widget.AppCompatRadioButton
+                                    android:id="@+id/rbSingleDevice"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:clickable="false"
+                                    android:text="Personal device"/>
+
+                            </RadioGroup>
+
+                            <EditText
+                                android:id="@+id/etRegkey"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/fifty_dp"
+                                android:layout_marginTop="@dimen/five_dp"
+                                android:focusable="false"
+                                android:enabled="false"
+                                android:focusableInTouchMode="true"
+                                android:hint="Registration key"
+                                android:inputType="text"
+                                android:maxLines="1"
+                                android:textSize="@dimen/sixteen_sp"
+                                android:visibility="visible"/>
+
+                            <Button
+                                android:id="@+id/btnSave"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/forty_dp"
+                                android:layout_weight="1"
+                                android:visibility="gone"
+                                android:layout_marginBottom="@dimen/twenty_dp"
+                                android:layout_marginTop="@dimen/five_dp"
+                                android:background="@drawable/bg_login_submit"
+                                android:text="@string/save"
+                                android:textColor="@android:color/white" />
+
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+                </android.support.v4.widget.NestedScrollView>
+            </android.support.v7.widget.CardView>
+
+            <LinearLayout
+                android:id="@+id/ll_bottom_action"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/twenty_dp"
+                android:layout_weight="8"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btnRegister"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/forty_dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_login_submit"
+                    android:text="@string/submit"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="top"
+        android:layout_marginTop="@dimen/ten_dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/ivProfileImage"
+            android:layout_width="@dimen/one_twenty_dp"
+            android:layout_height="@dimen/one_twenty_dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            app:srcCompat="@drawable/ic_add_profile"/>
+
+    </RelativeLayout>
+
+</FrameLayout>

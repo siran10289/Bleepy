@@ -137,6 +137,8 @@
     <string name="retured_codes">Retured codes</string>
     <string name="codes_register">Codes register</string>
     <string name="search_for_code">Search for code</string>
+    <string name="attend_emgs">Emergencies\n<b>Attended</b></string>
+    <string name="warnings_accepted">Warnings\n<b>Accpted</b></string>
 
 
 </resources>

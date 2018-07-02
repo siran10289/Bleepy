@@ -45,6 +45,7 @@ import bleepy.pack.com.bleepy.view.adapter.TeamsAdapter;
 import bleepy.pack.com.bleepy.view.callforhelp.CallForHelpActivity;
 import bleepy.pack.com.bleepy.view.team.GroupMembersActivity;
 
+import static bleepy.pack.com.bleepy.fcm.DeliverxFBMessagingService.soundName;
 import static bleepy.pack.com.bleepy.utils.AppUtils.stringForTime;
 import static bleepy.pack.com.bleepy.utils.Constants.ALERT_INTENT_CAMERA;
 import static bleepy.pack.com.bleepy.utils.Constants.ALERT_INTENT_GALLERY;
@@ -317,6 +318,7 @@ public class AppDialogManager {
         }
 
         emergencyAlertDialog = new Dialog(activity);
+        emergencyAlertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         emergencyAlertDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         emergencyAlertDialog.setCancelable(false);
         emergencyAlertDialog.setContentView(R.layout.dialog_waiting_acceptance);
@@ -438,8 +440,9 @@ public class AppDialogManager {
         }
 
         Dialog rejectionReasonDialog = new Dialog(activity);
+        rejectionReasonDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         rejectionReasonDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        rejectionReasonDialog.setCancelable(true);
+        rejectionReasonDialog.setCancelable(false);
         rejectionReasonDialog.setContentView(R.layout.dialog_rejection_reason);
         rejectionReasonDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
         Button btnOK=rejectionReasonDialog.findViewById(R.id.btnOK);
@@ -468,8 +471,20 @@ public class AppDialogManager {
         } catch (ClassCastException e) {
             throw new ClassCastException(object.toString() + " must implement DialogListener");
         }
-
+        if(soundName!=null) {
+            int resID = activity.getResources().getIdentifier(soundName, "raw", activity.getPackageName());
+            MediaPlayer mediaPlayer = MediaPlayer.create(activity, resID);
+            mediaPlayer.start();
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    mediaPlayer.stop();
+                    mediaPlayer.release();
+                }
+            });
+        }
         confirmationDialog = new Dialog(activity);
+        confirmationDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         confirmationDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         confirmationDialog.setCancelable(true);
         confirmationDialog.setContentView(R.layout.dialog_confirmation);
@@ -528,6 +543,7 @@ public class AppDialogManager {
 
 
         Dialog rejectionReasonDialog = new Dialog(activity);
+        rejectionReasonDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         rejectionReasonDialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         rejectionReasonDialog.setCancelable(true);
         rejectionReasonDialog.setContentView(R.layout.dialog_common);

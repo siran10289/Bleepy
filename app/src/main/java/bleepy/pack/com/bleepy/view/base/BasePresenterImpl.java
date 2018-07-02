@@ -80,6 +80,7 @@ public class BasePresenterImpl implements BaseContract.Presenter {
         emergencyAlertAcceptRequest.setUserId(String.valueOf(mPrefsManager.getIntKeyValueFromPrefsByKey(KEY_USERID)));
         emergencyAlertAcceptRequest.setCodeRespondTime(getTime());
         emergencyAlertAcceptRequest.setUserStatus(mEmergencyAlertView.getUserStatus());
+        Log.e("Request:",new Gson().toJson(emergencyAlertAcceptRequest).toString());
         mApiInteractor.acceptRejectEmergency(mActivity,mBaseView,emergencyAlertAcceptRequest,mEmergencyAlertResponseLoadListener,false);
 
     }
@@ -112,6 +113,7 @@ public class BasePresenterImpl implements BaseContract.Presenter {
     public void getCodeInformation(String codeID) {
         CodeInfoRequest codeInfoRequest=new CodeInfoRequest();
         codeInfoRequest.setCodeId(codeID);
+        Log.e("Request:",new Gson().toJson(codeInfoRequest).toString());
         mApiInteractor.getCodeInformation(mActivity,mBaseView,codeInfoRequest,mCodeInformationResponseLoadListener,false);
     }
 

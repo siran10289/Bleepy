@@ -9,6 +9,7 @@
 package bleepy.pack.com.bleepy.view.welcome;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -66,6 +67,9 @@ public class SplashScreenActivity extends BaseActivity implements SignupContract
         mPrefsManager=PrefsManagerImpl.getInstance(SplashScreenActivity.this);
         initComponent();
         mPresenter.getWelcomeScreens();
+
+
+
     }
 
     private void initComponent() {

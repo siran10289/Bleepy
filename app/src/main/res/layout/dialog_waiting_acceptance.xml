@@ -3,10 +3,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="#2DBBB2"
+    android:layout_margin="@dimen/twenty_dp"
+    android:background="@drawable/bg_roundcorner_green"
     android:padding="@dimen/ten_dp"
     android:orientation="vertical">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -27,7 +27,6 @@
             android:textSize="@dimen/sixteen_sp"
             android:textStyle="bold"/>
     </LinearLayout>
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,8 +54,6 @@
             android:text="Room 102"/>
 
     </RelativeLayout>
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -71,6 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/fifteen_dp"
             android:gravity="center"
+            android:textColor="@color/white"
             android:text="@string/dummy_text"/>
 
         <LinearLayout
@@ -98,7 +96,7 @@
                 android:id="@+id/tvCurrentTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="00.47"/>
+                android:text="00.00"/>
         </LinearLayout>
 
         <LinearLayout

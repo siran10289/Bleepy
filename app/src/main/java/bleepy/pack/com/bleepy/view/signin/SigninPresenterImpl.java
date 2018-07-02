@@ -174,6 +174,7 @@ public class SigninPresenterImpl implements SigninContract.Presenter {
         if(validateEmail()){
             ForgetCredentialsRequest forgetCredentialsRequest=new ForgetCredentialsRequest();
             forgetCredentialsRequest.setEmailid(mForgotPasswordView.getEmailID());
+            Log.e("Request:",new Gson().toJson(forgetCredentialsRequest).toString());
             mApiInteractor.forgetCredentials(mForgotPasswordView,forgetCredentialsRequest,mCommonResponseLoadListener,type,true);
         }
     }

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nl.psdcompany.duonavigationdrawer.views.DuoDrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <nl.psdcompany.duonavigationdrawer.views.DuoMenuView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:tag="@string/tag_menu"
+        app:footer="@layout/layout_dashboard_footer"
+        app:header="@layout/layout_dashboard_header"/>
+
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@color/white"
+        android:tag="@string/tag_content">
+
+        <android.support.design.widget.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:elevation="0dp"
+            android:theme="@style/AppTheme.AppBarOverlay">
+
+            <include layout="@layout/toolbar_white"></include>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <FrameLayout
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginTop="@dimen/fifty_dp"
+            android:layout_marginBottom="@dimen/fifty_dp"
+            android:background="@android:color/white" >
+
+
+        </FrameLayout>
+        <FrameLayout
+            android:id="@+id/containerShadow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/fifty_dp"
+            android:layout_marginBottom="@dimen/forty_dp"
+            android:background="@color/black_translucent" >
+
+
+        </FrameLayout>
+
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/eighty_dp"
+            android:layout_gravity="bottom">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/forty_dp"
+                android:layout_gravity="bottom"
+                android:background="@color/colorPrimary">
+
+                <ImageView
+                    android:id="@+id/ivHome"
+                    android:padding="@dimen/ten_dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/ic_home_bottom_menu"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_gravity="right"
+                    android:padding="@dimen/ten_dp"
+                    android:contentDescription="@string/todo"
+                    android:src="@drawable/ic_notification_bell"/>
+
+            </RelativeLayout>
+            <LinearLayout
+                android:id="@+id/llArcMenu"
+                android:layout_width="@dimen/seventy_dp"
+                android:layout_height="@dimen/sixty_dp"
+                android:layout_gravity="center"
+                android:background="@drawable/round_shape"
+                android:gravity="center">
+                <ImageView
+                    android:id="@+id/ivArcMenu"
+                    android:layout_width="@dimen/thirty_dp"
+                    android:layout_height="@dimen/thirty_dp"
+                    android:src="@drawable/logo_bottom_drawer"/>
+            </LinearLayout>
+
+        </FrameLayout>
+
+
+        <com.bvapp.arcmenulibrary.ArcMenu
+            android:id="@+id/arcMenu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_vertical"
+            android:layout_marginBottom="@dimen/sixty_dp"
+            app:menuChildAnim="true"
+            app:menuChildSize="@dimen/fifty_dp"
+            app:menuClickAnim="true"
+            android:visibility="visible"
+            app:menuGravity="Bottom_Middle"
+            app:menuImage="@android:color/transparent"
+            app:menuNormalColor="@android:color/transparent"
+            app:menuShadowElevation="false"
+            app:menuType="normal">
+        </com.bvapp.arcmenulibrary.ArcMenu>
+
+
+    </android.support.design.widget.CoordinatorLayout>
+
+
+
+</nl.psdcompany.duonavigationdrawer.views.DuoDrawerLayout>

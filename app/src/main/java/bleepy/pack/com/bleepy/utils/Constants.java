@@ -9,9 +9,9 @@ import android.os.Environment;
 public class Constants {
 
     public static final String DEV_DOMAINNAME = "http://bleepy.martgrid.com/mobileservices/";
-    public static final String CELENT_DOMAINNAME = "http://mobileservices.bleepy.com/";
+    public static final String CELENT_DOMAINNAME = "http://bleepyin.com/mobileservices/";
     public static String getDomainName() {
-        return DEV_DOMAINNAME;
+        return CELENT_DOMAINNAME;
     }
     /*Common Constants*/
     public static final boolean DEBUG_MODE=true;
